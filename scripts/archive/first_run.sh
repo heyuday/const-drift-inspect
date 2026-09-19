@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# ARCHIVED — DO NOT RUN.
+# Pre-OpenRouter. Missing the four required flags (-M strict_tools=false,
+# --max-tokens 32000, --timeout 300, --max-retries 3), so it fails outright on
+# OpenAI models and silently produces near-zero reasoning on Anthropic ones.
+# Superseded by scripts/run_experiment.sh. See scripts/archive/README.md.
+#
 # First real run: two sweeps that between them answer the four things worth knowing
 # on day one. ~72 sandboxed runs, ~10 min, a few dollars.
 #

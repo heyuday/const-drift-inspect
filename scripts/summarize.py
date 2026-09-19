@@ -201,7 +201,7 @@ def main() -> int:
             f"cost:       ${cost:.2f} total = ${cost / n:.4f} per run "
             f"(at ${pin:g}/${pout:g} per 1M; {out_share:.0f}% of it output)"
         )
-        print(f"            -> 72-run first_run.sh ≈ ${cost / n * 72:.2f}")
+        print(f"            -> 72-run sweep ≈ ${cost / n * 72:.2f}")
 
     # --- content table: the measure change_ratio could not see ---------------------
     print(f"\n{'cell'.ljust(label_w)}  {'n':>3}" + "".join(

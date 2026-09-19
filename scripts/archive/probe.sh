@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# ARCHIVED — DO NOT RUN.
+# Pre-OpenRouter, same missing flags as first_run.sh. run_experiment.sh now
+# reports measured cost directly. See scripts/archive/README.md.
+#
 # Measure what a run actually costs before committing to a sweep.
 #
 # Two samples at the reference cell. Reports measured tokens, cost per run, and what

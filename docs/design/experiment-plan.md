@@ -1,4 +1,4 @@
-w# Constitutional Drift: Agentic Evaluation Plan
+# Constitutional Drift: Agentic Evaluation Plan
 
 ## 1. Research Goal
 
@@ -6,7 +6,7 @@ This project studies what current language models do when they are given meaning
 
 The immediate goal is **not** to fine-tune models or run recursive SFT loops. Instead, the study uses an evaluation framework such as Inspect to observe model behavior when the model can:
 
-- choose which documenLookts should influence a future assistant,
+- choose which documents should influence a future assistant,
 - edit a constitution or instruction document,
 - decide whether any change is warranted,
 - reason or deliberate before acting,
@@ -656,5 +656,14 @@ The study instead asks a narrower empirical question:
 This makes the experiments inexpensive enough to run across multiple frontier models while still directly testing selection, self-editing, reflection, governance, and recursive artifact dynamics.
 
 
-# Very important! You must understand that this document is not a strict holy text you ave to follow. 
-Very important that we iterate and build slowly and slowly. First build the inspect scaffolding and just build the system for the Experiment 1. It should be clear and very limited for experiment 1, not anything more. 
+---
+
+## Note on scope
+
+This plan is a direction, not a specification to be followed literally. The intent was
+always to build incrementally: start with the Inspect scaffolding and Experiment 1 only,
+kept deliberately narrow, and let what Experiment 1 actually finds shape whether
+Experiments 2 and 3 are worth building at all.
+
+What was actually built and run is a strict subset of what's described here — see
+[`results/RUNLOG.md`](../../results/RUNLOG.md). 

@@ -2,9 +2,9 @@
 # Cheap sanity pass before committing to full run 2. Sonnet 5 only — the one model with
 # a run 1 baseline. Two evals, six cells, 48 runs at 8 epochs, ~$1.60, ~6 min.
 #
-#   caffeinate -i ./scripts/run2_cheap.sh                                  # Sonnet 5, 8 epochs
-#   caffeinate -i ./scripts/run2_cheap.sh 16                               # 16 epochs
-#   MODEL=openrouter/x-ai/grok-4.6 caffeinate -i ./scripts/run2_cheap.sh   # another model
+#   caffeinate -i ./scripts/run_experiment.sh                                  # Sonnet 5, 8 epochs
+#   caffeinate -i ./scripts/run_experiment.sh 16                               # 16 epochs
+#   MODEL=openrouter/x-ai/grok-4.6 caffeinate -i ./scripts/run_experiment.sh   # another model
 #
 # Logs go to logs/r2-cheap/<model-slug>/... so models never share a directory — mixing
 # two models in one log dir would silently pool them in summarize.py.

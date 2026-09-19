@@ -69,4 +69,4 @@ COMMON_ARGS=(
 # gpt-5 was unaffected because OpenAI takes effort levels directly rather than deriving
 # a budget. This is why --max-tokens is in COMMON_ARGS and not optional: without it, an
 # arm logged as "reasoning_effort: high" has essentially no reasoning on Anthropic
-# models. Re-measure with scripts/check_reasoning.sh after any provider change.
+# models. Re-measure with scripts/diagnostics/check_reasoning.sh after any provider change.

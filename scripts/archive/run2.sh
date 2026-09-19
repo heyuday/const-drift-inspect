@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# ARCHIVED — NEVER EXECUTED, AND CURRENT GUIDANCE IS NOT TO RUN IT.
+# A full ~680-run sweep costing roughly $38. Not broken — just superseded as a
+# priority: the two completed experiments reshaped the question, so a broad
+# sweep would mostly buy precision on things already known qualitatively.
+# See docs/GUIDE.md Part 6 and scripts/archive/README.md.
+#
 # Run 2 — the uninstructed-edit experiment, across four models and four constitutions.
 #
 #   ./scripts/run2.sh probe      # 1 cell x 2 epochs per model  (~8 runs, measures cost)

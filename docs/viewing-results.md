@@ -1,6 +1,6 @@
 # How to look at any run yourself
 
-Written 2026-09-16. Step-by-step, in order of how much detail you want to see: browser
+Step-by-step, in order of how much detail you want to see: browser
 viewer first (easiest, most complete), then flat files (fastest to scan many runs), then
 raw Python (for anything the other two don't show).
 
@@ -32,7 +32,7 @@ in the left sidebar. You get:
 - The full back-and-forth: every message the model sent, every tool call it made
   (`text_editor view`, `text_editor str_replace`, `bash`, ...) and what came back
 - The model's **reasoning**, if the provider returned readable text (Sonnet and DeepSeek
-  do; gpt-5's comes back encrypted and unreadable — see `RESULTS_R3_EB_SEEDS.md` §2 for
+  do; gpt-5's comes back encrypted and unreadable — see [r3-eb-seeds.md](../results/r3-eb-seeds.md) §2 for
   why)
 - The scorer's output at the bottom: `changed`, `change_ratio`, the full diff, the final
   document text, everything `scoring.py` and `content.py` recorded
@@ -52,7 +52,7 @@ python3 scripts/export_runs.py --log-dir logs/<sweep-name>/<model-slug> \
   --out exports/<sweep-name>/<model-slug>
 ```
 
-(For run 3, this is already done — `exports/r3-eb-seeds/` exists.)
+(Both completed experiments are already exported.)
 
 **To see the numbers for every run in a spreadsheet:**
 
@@ -146,24 +146,27 @@ Add `--by seed` (or any comma-separated list of factor names) to control how it 
 
 ---
 
-## Where each existing run's data lives right now
+## Where each experiment's data lives
 
-| Run | Log directory | Exported? |
+| Experiment | Log directory | Exports |
 |---|---|---|
-| Run 2p (probe, 4 models) | `logs/r2-probe/<model-slug>/` | no |
-| Run 2c (Sonnet + DeepSeek, task×seed + embodiment) | `logs/r2-cheap/<model-slug>/{task-x-seed,embodiment}/` | yes, `exports/r2-cheap/<model-slug>/` |
-| Run 3 (3 models × 2 value-loaded seeds) | `logs/r3-eb-seeds/<model-slug>/` | yes, `exports/r3-eb-seeds/<model-slug>/` |
-| Run 1 (the original 72-run sweep) | — | **deleted, unrecoverable** — see `RUN.md` |
+| [`r2-cheap`](../results/r2-cheap.md) | `logs/r2-cheap/<model-slug>/{task-x-seed,embodiment}/` | `exports/r2-cheap/<model-slug>/` |
+| [`r3-eb-seeds`](../results/r3-eb-seeds.md) | `logs/r3-eb-seeds/<model-slug>/` | `exports/r3-eb-seeds/<model-slug>/` |
 
 `<model-slug>` is the model name with `/` replaced by `-`, e.g.
-`openrouter-anthropic-claude-sonnet-5`.
+`openrouter-anthropic-claude-sonnet-5`. The authoritative list, including costs and run
+counts, is [`results/runs.yaml`](../results/runs.yaml).
+
+`logs/_archive/` holds earlier exploratory runs that are not part of the results, and
+`logs/smoke/` is regenerable output from `tests/smoke.py`. Both are skipped by
+`scripts/check_docs.py`.
 
 ## One thing worth knowing before you read reasoning text
 
 The "reasoning" shown in the viewer or pulled via `ContentReasoning` is a **model-generated
 summary of its own process**, provided by the API, not a raw unedited internal log. Treat
 it as the model's account of what it was doing — informative, and in several cases (see
-`RESULTS_R3_EB_SEEDS.md` §1, the Sonnet "outlier" example) genuinely detailed and
+[r3-eb-seeds.md](../results/r3-eb-seeds.md) §1, the Sonnet "outlier" example) genuinely detailed and
 specific — but not a guaranteed ground-truth trace. And for gpt-5 specifically, on this
 project's OpenRouter routing, the reasoning field comes back **encrypted** and unreadable;
 only Sonnet's and DeepSeek's are plain text.

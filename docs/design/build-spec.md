@@ -378,6 +378,11 @@ Keep this analysis utility descriptive. No embeddings, value axes, or statistica
 
 # 10. Suggested repository shape
 
+> **Superseded.** This was the original proposal. The repository has since grown two more
+> package modules (`conditions.py`, `content.py`) and a number of scripts and tests not
+> listed below. For the actual structure, see the Layout section of
+> [`README.md`](../../README.md) and [`scripts/README.md`](../../scripts/README.md).
+
 The exact names can change, but keep the implementation small and readable:
 
 ```text

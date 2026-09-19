@@ -1,15 +1,20 @@
 # Constitutional Drift — Experiment 1
 
-When a language model is given bounded authority over a governing document for an AI
-assistant, what does it preserve, change, add, remove, or reprioritise — and how
-sensitive are those choices to the framing of that authority?
+When a language model is given real authority over a document that will govern a future
+AI assistant, what does it change?
 
-This repository implements **Experiment 1 only**: single-step constitutional
-self-editing. One Inspect task, one editable artifact, a deterministic diff scorer, and
-an export utility. Design docs are in [docs/](docs/).
+This repo runs that question as an [Inspect AI](https://inspect.aisi.org.uk/) evaluation.
+One run puts a single editable constitution in a Docker container, hands a model a text
+editor, and measures what comes back out.
 
-There is no fine-tuning, LoRA, preference optimisation, or weight update anywhere in
-this repository, and no dependency that could perform one.
+> **New here? Read [docs/GUIDE.md](docs/GUIDE.md) first.** It explains the research
+> question, how the code works, and everything found so far. This file is the quick
+> start — setup and commands.
+
+**Results so far:** two experiments, 96 runs, $3.57 — see
+[results/RUNLOG.md](results/RUNLOG.md).
+
+---
 
 ## What one run does
 
@@ -19,10 +24,10 @@ A sample provisions a fresh Docker sandbox containing exactly one file:
 /workspace/constitution.md      <- verbatim bytes of a seed from data/constitutions/
 ```
 
-The subject gets `text_editor()` and nothing else — no bash, no python, no network — and
-a prompt built from the condition. It reads the document and either edits it or does
-not. Afterwards the scorer reads the file back out of the sandbox and records what
-changed, without an LLM judge.
+The model gets `text_editor()` and nothing else — no bash unless the condition grants it,
+no network — plus a prompt built from the condition. It reads the document and either
+edits it or does not. Afterwards a scorer reads the file back out of the sandbox and
+records what changed, using deterministic diffing rather than an LLM judge.
 
 ## Setup
 
@@ -35,74 +40,64 @@ docker info                                   # must be running; one container p
 
 Everything routes through **OpenRouter**, so any model is one string change:
 `openrouter/anthropic/claude-sonnet-5`, `openrouter/openai/gpt-5`,
-`openrouter/x-ai/grok-4.6`, `openrouter/deepseek/deepseek-chat-v3.1`. The roster the run
-scripts use lives in [`scripts/models.sh`](scripts/models.sh).
-
-`--reasoning-effort` works through OpenRouter (it maps to `extra_body.reasoning.effort`)
-but accepts **`low`/`medium`/`high` only** — `xhigh` and `max` are Anthropic-direct values.
-
-Preflight — confirms your model resolves, authenticates, and calls tools, for a
-fraction of a cent and no Docker:
-
-```bash
-inspect eval scripts/toy_eval.py --model <provider/model>
-```
+`openrouter/deepseek/deepseek-chat-v3.1`. The roster lives in
+[`scripts/models.sh`](scripts/models.sh).
 
 ## Running
 
-```bash
-T=constitutional_drift/tasks.py@constitution_edit
-
-# the reference cell, 10 independent runs
-inspect eval $T --model <provider/model> --epochs 10
-
-# one factor swept across all its levels, in a single log
-inspect eval $T --model <provider/model> -T authority=all --epochs 20
-
-# a named subset, plus the sparse seed
-inspect eval $T --model <provider/model> \
-  -T authority=optional,edit_seeking -T identity=abstract,future_same \
-  -T seed=c0_minimal --epochs 20
-
-# provider reasoning effort is a run-level setting, not a task factor
-inspect eval $T --model <provider/model> --reasoning-effort high --epochs 20
-```
-
-### Measure the cost first
+Preflight first — confirms your model resolves, authenticates, and calls tools, for a
+fraction of a cent and no Docker:
 
 ```bash
-./scripts/probe.sh                    # 2 runs, ~10 cents, reports measured $/run
-./scripts/probe.sh openrouter/anthropic/claude-sonnet-5 low   # same at low reasoning effort
+inspect eval scripts/toy_eval.py --model openrouter/anthropic/claude-sonnet-5
 ```
 
-Sonnet 5 runs adaptive thinking at **effort=high** whenever no thinking parameter is
-sent, and Inspect sends none unless `--reasoning-effort` is passed. So the apparent
-"default" arm is high-effort thinking, logged as `reasoning_effort=None` — which reads
-like "off" and is not. Thinking tokens bill as output, so this dominates cost. Pass an
-explicit effort to pin the condition and control spend.
-
-### Fastest real run
+Then run an experiment:
 
 ```bash
-./scripts/first_run.sh                            # Sonnet 5, 8 epochs, ~72 runs
-./scripts/first_run.sh openrouter/anthropic/claude-sonnet-5 4 low   # cheaper: 4 epochs, low effort
-./scripts/first_run.sh openrouter/anthropic/claude-opus-5 12 # other model / more epochs
+# default: Sonnet 5, 8 epochs, ~48 runs, ~$2
+caffeinate -i ./scripts/run_experiment.sh
+
+# another model, or more repeats
+MODEL=openrouter/openai/gpt-5 caffeinate -i ./scripts/run_experiment.sh 16
 ```
 
-Preflight, an authority sweep, an identity x mechanism 2x2, then summary tables and
-exports. About 10 minutes.
-
-Then:
+Or call the task directly for an arbitrary condition grid:
 
 ```bash
-python scripts/summarize.py --log-dir logs/a-authority    # per-cell table
-inspect view --log-dir logs/a-authority                   # full transcripts
-python scripts/export_runs.py --log-dir logs --out exports/run1
+inspect eval constitutional_drift/tasks.py@constitution_edit \
+  --model openrouter/anthropic/claude-sonnet-5 \
+  -M strict_tools=false --max-tokens 32000 --timeout 300 --max-retries 3 \
+  --reasoning-effort high \
+  -T task=all -T seed=c0_eb_marxism,c0_broad_consensus \
+  --epochs 8 --log-dir logs/my-experiment/openrouter-anthropic-claude-sonnet-5
 ```
 
-**Read [scripts/sweeps.md](scripts/sweeps.md) before spending money.** The factor grid
-is 720 cells; the recommended design is one factor at a time off a fixed reference cell,
-about 380 runs per model for all main effects.
+Then read the results:
+
+```bash
+python3 scripts/summarize.py --log-dir logs/my-experiment --by task,seed
+python3 scripts/export_runs.py --log-dir logs/my-experiment --out exports/my-experiment
+inspect view --log-dir logs/my-experiment      # full transcripts in a browser
+```
+
+**Running your own experiment?** Follow
+[docs/running-your-own.md](docs/running-your-own.md) — it's a short checklist, and the
+last step (adding your run to `results/runs.yaml`) is enforced by
+`scripts/check_docs.py`.
+
+## Four flags that are not optional
+
+Every real run needs these. They are standing technical requirements, not tuning:
+
+| Flag | Why |
+|---|---|
+| `-M strict_tools=false` | Inspect sends `"strict": true` on tool schemas. OpenAI's strict mode requires every property to appear in `required`; the editor tool has 8 properties and 2 required, so **gpt-5 hard-fails without this**. |
+| `--max-tokens 32000` | OpenRouter derives Anthropic's thinking budget from `max_tokens`. Left unset, Sonnet reasons ~38 tokens per run instead of ~634, while the log still reports `reasoning_effort: high`. |
+| `--timeout 300` | Inspect defaults to **no request timeout** — a dropped connection hangs a sweep indefinitely. |
+| `--max-retries 3` | The default is **unlimited**. |
+
+`scripts/run_experiment.sh` sets all four for you.
 
 ## Factors
 
@@ -122,6 +117,10 @@ expand to one sample per cell, with the condition in `Sample.metadata`. Combine 
 | `permissions` | `full`, `add_only`, `revise_only` | Which kinds of edit are permitted (measured, not enforced) |
 | `deliberation` | `none`, `explicit` | `explicit` also grants and requires `think()` |
 
+The full grid is **7,680 cells** — never run it as a Cartesian product. Fix a reference
+cell and vary one or two factors at a time; see
+[docs/design/sweeps.md](docs/design/sweeps.md) for designs and cost estimates.
+
 **`task=unprompted` is a different task, not a framing of the same one.** The subject is
 told the document will shape a future model and invited to look at it. Nothing mentions
 editing — the words *revise, edit, change, improve, modify, rewrite, update, unchanged,
@@ -133,26 +132,24 @@ cell rather than billing five identical ones.
 
 `identity` and `mechanism` are kept orthogonal on purpose. "This will train future
 models" bundles both, and bundled, neither effect is attributable. Exact subject-facing
-text for every value is in [`constitutional_drift/prompts.py`](constitutional_drift/prompts.py).
+text for every value is in
+[`constitutional_drift/prompts.py`](constitutional_drift/prompts.py).
 
 ## What is recorded
 
 Inspect's `.eval` log holds the complete transcript, every tool call, model config, and
 token usage. On top of that the `constitution_change` scorer records, per run:
 
-`changed` (normalised) and `changed_raw` · SHA-256 of C0 and of the final document ·
+`changed` (normalised) and `changed_raw` · SHA-256 of the seed and of the final document ·
 char / word / line counts before and after · `change_ratio` (1 − difflib similarity over
 normalised text) · `lines_added` / `lines_deleted` / `lines_modified` ·
-`permission_violation`, with its exact components `c0_lines_preserved` and
-`net_line_growth` · `workspace_files` and `extra_files` · the unified diff · **the
-full final constitution**, in both `Score.answer` and scorer metadata.
-
-The headline metric is `edit_rate`: the fraction of runs in which the document changed
-at all. It is descriptive. Nothing here is correct or incorrect, and `edit_rate = 1.0`
-means every run edited, not that every run succeeded.
+`permission_violation`, with its components `c0_lines_preserved` and `net_line_growth` ·
+`workspace_files` and `extra_files` · the unified diff · **the full final constitution**,
+in both `Score.answer` and scorer metadata.
 
 `scripts/export_runs.py` flattens all of that to `runs.csv` + `runs.jsonl`, and writes
-each final constitution as a plain `.md` and each diff as a `.diff`.
+each final constitution as a plain `.md` and each diff as a `.diff`. To read any of it,
+see [docs/viewing-results.md](docs/viewing-results.md).
 
 ## Design decisions worth knowing
 
@@ -169,70 +166,52 @@ each final constitution as a plain `.md` and each diff as a `.diff`.
   guarantee compliance but change the tool surface between arms, and the tool surface is
   part of the treatment. Compliance is measured instead — and non-compliance is a result.
   Violation detection uses exact line-set preservation rather than difflib opcodes,
-  because `SequenceMatcher` merges an insertion adjacent to a reword into one
-  `replace` and would hide it.
+  because `SequenceMatcher` merges an insertion adjacent to a reword into one `replace`
+  and would hide it.
 - **The framings are counterfactual.** No future assistant is governed, trained, or
   deployed by any run, `mechanism=context` included. These are experimental premises.
-- **C0 is not neutral.** No normative document is. See
+- **The seeds are not neutral.** No normative document is. See
   [data/constitutions/README.md](data/constitutions/README.md) for provenance.
 
 ## Tests
 
 ```bash
-python -m pytest              # 61 unit tests: no model, no sandbox, no network
-python tests/smoke.py         # end-to-end: real Docker + text_editor + scorer,
-                              # driven by mockllm. No API key, no paid call.
+python -m pytest -q     # unit tests: no model, no sandbox, no network
+python tests/smoke.py   # end-to-end: real Docker + text_editor + scorer, driven by
+                        # mockllm. No API key, no paid call.
+python scripts/check_docs.py   # results/runs.yaml matches what's on disk
 ```
 
-The smoke test exercises the edit path, the no-edit path, and permission-violation
-detection, and asserts the final artifact survives into the log.
+The smoke test exercises the edit path, the no-edit path, permission-violation detection,
+and the uninstructed-edit path, and asserts the final artifact survives into the log.
 
 ## Layout
 
 ```
-constitutional_drift/
-  conditions.py   factor grid, validation, CLI list expansion, stable sample ids
-  prompts.py      every string the subject can see
-  scoring.py      deterministic diff statistics; no LLM judge
-  tasks.py        the constitution_edit task
-data/constitutions/
-  c0_broad_consensus.md   default seed (~480 words)
-  c0_minimal.md           sparse contrast (~87 words)
-  README.md               provenance — never shown to the subject
-scripts/
-  probe.sh        2 runs, measured tokens + $/run before committing to a sweep
-  first_run.sh    preflight + two sweeps + summaries, one command
-  toy_eval.py     preflight connectivity + tool-use check
-  summarize.py    per-cell table straight from the logs
-  sweeps.md       the recommended experimental design
-  export_runs.py  logs -> runs.csv, runs.jsonl, constitutions/*.md, diffs/*.diff
-compose.yaml      bare sandbox: no bash, no python, no network
+constitutional_drift/   the experiment itself — conditions, prompts, scoring, task
+data/constitutions/     the starting documents (seeds)
+scripts/                runners and analysis tools — see scripts/README.md
+results/                run index + one writeup per experiment
+docs/                   orientation, how-tos, and design rationale
+tests/                  123 unit tests + an end-to-end smoke script
+logs/                   raw .eval logs (gitignored)
+exports/                flattened runs.csv / diffs / final documents (gitignored)
 ```
+
+## Eval logs are unrecoverable — do not bulk-delete them
+
+`logs/` is gitignored and holds the only copy of every completed run: transcripts, tool
+calls, diffs, and final artifacts. `rm -rf logs` has already destroyed a finished sweep
+once during development.
+
+- Smoke tests write to `.smoke-logs/`, never inside `logs/`.
+- Delete a single sweep by name, never the parent. Better: move it to `logs/_archive/`.
+- Run `scripts/export_runs.py` after a sweep — `exports/` holds a flat, re-readable copy,
+  so an accidental log loss is survivable.
 
 ## Not implemented, on purpose
 
 Experiment 2 (data curation), Experiment 3 (free-control environment), recursive
 C0 → C1 → C2 rounds, multi-agent critic / panel / finalizer roles, LLM value judges,
-EigenBench or external behavioural probes, and custom value axes. See
-[docs/experiment1_inspect_build_spec.md](docs/experiment1_inspect_build_spec.md) §13 for
-the roadmap. Adding any of them before the single-step baseline is validated would make
-the baseline harder to interpret, not easier.
-
-## Adding a starting constitution
-
-Drop a `.md` file into `data/constitutions/`, document its provenance in that
-directory's README, and pass `-T seed=<filename stem>`. Seeds are discovered by
-filesystem scan; no code change is needed.
-
-## Eval logs are unrecoverable — do not bulk-delete them
-
-`logs/` is gitignored and holds the only copy of every completed run: transcripts,
-tool calls, diffs, and final artifacts. `rm -rf logs` has already destroyed one finished
-72-run sweep during development.
-
-- Smoke tests write to `.smoke-logs/`, never inside `logs/`, so clearing smoke output
-  cannot touch real data.
-- Delete a single sweep by name (`rm -rf logs/r2c-unprompted`), never the parent.
-- Run `python scripts/export_runs.py` after a sweep. `exports/` holds a flat, re-readable
-  copy (`runs.jsonl` carries the full diff and final constitution), so an accidental log
-  loss is survivable.
+and external behavioural probes. See
+[docs/design/build-spec.md](docs/design/build-spec.md) §13 for the roadmap.

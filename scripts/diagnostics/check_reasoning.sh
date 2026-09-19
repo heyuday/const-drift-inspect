@@ -5,8 +5,8 @@
 # probe (OpenRouter, effort=high, max_tokens unset) got 11-65. This measures three
 # configurations on one cell so the arm labelled "high" can be trusted or fixed.
 #
-#   ./scripts/check_reasoning.sh                                  # Sonnet 5
-#   ./scripts/check_reasoning.sh openrouter/openai/gpt-5
+#   ./scripts/diagnostics/check_reasoning.sh                                  # Sonnet 5
+#   ./scripts/diagnostics/check_reasoning.sh openrouter/openai/gpt-5
 #
 # ~6 samples per model. Cents.
 set -uo pipefail
