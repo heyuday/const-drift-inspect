@@ -1,4 +1,4 @@
-# Constitutional Drift — Experiment 1
+# Constitutional Drift, Experiment 1
 
 When a language model is given real authority over a document that will govern a future
 AI assistant, what does it change?
@@ -9,9 +9,9 @@ editor, and measures what comes back out.
 
 > **New here? Read [docs/GUIDE.md](docs/GUIDE.md) first.** It explains the research
 > question, how the code works, and everything found so far. This file is the quick
-> start — setup and commands.
+> start, setup and commands.
 
-**Results so far:** two experiments, 96 runs, $3.57 — see
+**Results so far:** two experiments, 96 runs, $3.57, see
 [results/RUNLOG.md](results/RUNLOG.md).
 
 ---
@@ -24,8 +24,8 @@ A sample provisions a fresh Docker sandbox containing exactly one file:
 /workspace/constitution.md      <- verbatim bytes of a seed from data/constitutions/
 ```
 
-The model gets `text_editor()` and nothing else — no bash unless the condition grants it,
-no network — plus a prompt built from the condition. It reads the document and either
+The model gets `text_editor()` and nothing else, no bash unless the condition grants it,
+no network, plus a prompt built from the condition. It reads the document and either
 edits it or does not. Afterwards a scorer reads the file back out of the sandbox and
 records what changed, using deterministic diffing rather than an LLM judge.
 
@@ -45,7 +45,7 @@ Everything routes through **OpenRouter**, so any model is one string change:
 
 ## Running
 
-Preflight first — confirms your model resolves, authenticates, and calls tools, for a
+Preflight first, confirms your model resolves, authenticates, and calls tools, for a
 fraction of a cent and no Docker:
 
 ```bash
@@ -82,7 +82,7 @@ inspect view --log-dir logs/my-experiment      # full transcripts in a browser
 ```
 
 **Running your own experiment?** Follow
-[docs/running-your-own.md](docs/running-your-own.md) — it's a short checklist, and the
+[docs/running-your-own.md](docs/running-your-own.md), it's a short checklist, and the
 last step (adding your run to `results/runs.yaml`) is enforced by
 `scripts/check_docs.py`.
 
@@ -94,7 +94,7 @@ Every real run needs these. They are standing technical requirements, not tuning
 |---|---|
 | `-M strict_tools=false` | Inspect sends `"strict": true` on tool schemas. OpenAI's strict mode requires every property to appear in `required`; the editor tool has 8 properties and 2 required, so **gpt-5 hard-fails without this**. |
 | `--max-tokens 32000` | OpenRouter derives Anthropic's thinking budget from `max_tokens`. Left unset, Sonnet reasons ~38 tokens per run instead of ~634, while the log still reports `reasoning_effort: high`. |
-| `--timeout 300` | Inspect defaults to **no request timeout** — a dropped connection hangs a sweep indefinitely. |
+| `--timeout 300` | Inspect defaults to **no request timeout**, a dropped connection hangs a sweep indefinitely. |
 | `--max-retries 3` | The default is **unlimited**. |
 
 `scripts/run_experiment.sh` sets all four for you.
@@ -113,17 +113,17 @@ expand to one sample per cell, with the condition in `Sample.metadata`. Combine 
 | `tools` | `editor`, `editor_bash` | Action space; `editor_bash` adds `bash()` |
 | `authority` | `optional`, `neutral`, `conservative`, `edit_seeking`, `full_authority` | How much permission or pressure to intervene |
 | `identity` | `abstract`, `future_same`, `successor`, `other_model` | **Who** the document is said to govern |
-| `mechanism` | `context`, `finetune_data`, `post_training_replacement` | **How** it is said to act — context, or weights |
+| `mechanism` | `context`, `finetune_data`, `post_training_replacement` | **How** it is said to act, context, or weights |
 | `permissions` | `full`, `add_only`, `revise_only` | Which kinds of edit are permitted (measured, not enforced) |
 | `deliberation` | `none`, `explicit` | `explicit` also grants and requires `think()` |
 
-The full grid is **7,680 cells** — never run it as a Cartesian product. Fix a reference
+The full grid is **7,680 cells**, never run it as a Cartesian product. Fix a reference
 cell and vary one or two factors at a time; see
 [docs/design/sweeps.md](docs/design/sweeps.md) for designs and cost estimates.
 
 **`task=unprompted` is a different task, not a framing of the same one.** The subject is
 told the document will shape a future model and invited to look at it. Nothing mentions
-editing — the words *revise, edit, change, improve, modify, rewrite, update, unchanged,
+editing, the words *revise, edit, change, improve, modify, rewrite, update, unchanged,
 preserve* appear nowhere in that prompt, and a test asserts it. Any edit is uninstructed,
 recorded as `unsanctioned_edit`. Because nothing asks for an edit, `authority` and
 `permissions` have nothing to modulate: they are forced to their reference values and
@@ -154,7 +154,7 @@ see [docs/viewing-results.md](docs/viewing-results.md).
 ## Design decisions worth knowing
 
 - **The ReAct scaffold is nulled out.** Inspect's default agent prompt says *"attempting
-  to submit the best possible answer... Do some reasoning before your actions"* — that is
+  to submit the best possible answer... Do some reasoning before your actions"*, that is
   goal-seeking and reasoning pressure applied invisibly to every arm. It is replaced by a
   single submit instruction, so the system message is constant across all conditions and
   the only text that varies is the user turn.
@@ -164,7 +164,7 @@ see [docs/viewing-results.md](docs/viewing-results.md).
   (it also adds a tool) and is analysed as its own condition, never pooled.
 - **Editing constraints are stated, not enforced.** A restricted editor tool would
   guarantee compliance but change the tool surface between arms, and the tool surface is
-  part of the treatment. Compliance is measured instead — and non-compliance is a result.
+  part of the treatment. Compliance is measured instead, and non-compliance is a result.
   Violation detection uses exact line-set preservation rather than difflib opcodes,
   because `SequenceMatcher` merges an insertion adjacent to a reword into one `replace`
   and would hide it.
@@ -188,9 +188,9 @@ and the uninstructed-edit path, and asserts the final artifact survives into the
 ## Layout
 
 ```
-constitutional_drift/   the experiment itself — conditions, prompts, scoring, task
+constitutional_drift/   the experiment itself, conditions, prompts, scoring, task
 data/constitutions/     the starting documents (seeds)
-scripts/                runners and analysis tools — see scripts/README.md
+scripts/                runners and analysis tools, see scripts/README.md
 results/                run index + one writeup per experiment
 docs/                   orientation, how-tos, and design rationale
 tests/                  123 unit tests + an end-to-end smoke script
@@ -198,7 +198,7 @@ logs/                   raw .eval logs (gitignored)
 exports/                flattened runs.csv / diffs / final documents (gitignored)
 ```
 
-## Eval logs are unrecoverable — do not bulk-delete them
+## Eval logs are unrecoverable, do not bulk-delete them
 
 `logs/` is gitignored and holds the only copy of every completed run: transcripts, tool
 calls, diffs, and final artifacts. `rm -rf logs` has already destroyed a finished sweep
@@ -206,7 +206,7 @@ once during development.
 
 - Smoke tests write to `.smoke-logs/`, never inside `logs/`.
 - Delete a single sweep by name, never the parent. Better: move it to `logs/_archive/`.
-- Run `scripts/export_runs.py` after a sweep — `exports/` holds a flat, re-readable copy,
+- Run `scripts/export_runs.py` after a sweep, `exports/` holds a flat, re-readable copy,
   so an accidental log loss is survivable.
 
 ## Not implemented, on purpose

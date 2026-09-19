@@ -1,7 +1,7 @@
 # Starting constitutions (C0 seeds)
 
 **These files are researcher-constructed research instruments. They are not validated
-statements of universal human values, and they are not "neutral" — no normative document
+statements of universal human values, and they are not "neutral", no normative document
 is. They are called *broad-consensus* and *minimal* to describe their construction, not
 to assert correctness.**
 
@@ -14,9 +14,9 @@ Only the `.md` seed file itself is copied into the sandbox, as `/workspace/const
 |---|---|---|---|
 | `c0_broad_consensus.md` | ~480 | Default seed / reference cell | yes |
 | `c0_minimal.md` | ~87 | Sparse contrast: lots of headroom to add | yes |
-| `c0_eb_universal_kindness.md` | ~655 | Value-loaded: impartial-care anchor | **no — fetched** |
-| `c0_eb_conservatism.md` | ~591 | Value-loaded: tradition/continuity anchor | **no — fetched** |
-| `c0_eb_marxism.md` | ~787 | Value-loaded: historical-materialist anchor | **no — fetched** |
+| `c0_eb_universal_kindness.md` | ~655 | Value-loaded: impartial-care anchor | **no, fetched** |
+| `c0_eb_conservatism.md` | ~591 | Value-loaded: tradition/continuity anchor | **no, fetched** |
+| `c0_eb_marxism.md` | ~787 | Value-loaded: historical-materialist anchor | **no, fetched** |
 
 The three `c0_eb_*` seeds are **not committed**. Regenerate them with:
 
@@ -29,15 +29,15 @@ python scripts/fetch_eigenbench_seeds.py
 Twelve principles chosen to satisfy the design properties in
 `docs/experiment1_inspect_build_spec.md` §2:
 
-1. Provider-neutral — no "Claude", "OpenAI", "Anthropic", no principal hierarchy.
-2. Plausible and broadly defensible — the model is not forced to repair absurd content.
+1. Provider-neutral, no "Claude", "OpenAI", "Anthropic", no principal hierarchy.
+2. Plausible and broadly defensible, the model is not forced to repair absurd content.
 3. Short enough that individual edits stay legible.
-4. Broad rather than exhaustive — room for models to add principles we did not pre-install.
+4. Broad rather than exhaustive, room for models to add principles we did not pre-install.
 5. Contains natural tradeoffs (helpfulness vs. harm, autonomy vs. third-party effects,
    pluralism vs. truth) so priority-setting behaviour is observable.
 6. Does **not** pre-answer the interesting questions: no self-preservation,
    anti-self-preservation, power-seeking, shutdown, or provider-loyalty clauses.
-7. No global priority ordering — the document explicitly declines to rank its principles,
+7. No global priority ordering, the document explicitly declines to rank its principles,
    so introducing a hierarchy is an observable model choice.
 
 Its ideas are grounded in several public source families, none copied verbatim:
@@ -81,7 +81,7 @@ contaminated. `fetch_eigenbench_seeds.py` asserts none of them survive into the 
 ### Known limitations of the conversion
 
 - **No closing paragraph.** `c0_broad_consensus` ends with "These principles are
-  deliberately not given a fixed global priority order" — our sentence, not upstream's.
+  deliberately not given a fixed global priority order", our sentence, not upstream's.
   Writing it into the Marxism seed would put a substantive claim in that value system's
   mouth, so these seeds have no equivalent clause. **Consequence: the "model introduces a
   priority ordering" finding from run 1 is not directly comparable across seed families**,
@@ -110,5 +110,5 @@ self-contradictory seed, and a strongly value-loaded / persona seed.
 ## Versioning
 
 Every run records the SHA-256 of the exact C0 bytes it was given. If you edit a seed
-file, previous logs remain interpretable via that hash — but prefer adding a new file
+file, previous logs remain interpretable via that hash, but prefer adding a new file
 over mutating an existing one.

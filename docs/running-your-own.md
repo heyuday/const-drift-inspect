@@ -2,7 +2,7 @@
 
 A checklist for adding experiment #3. It takes about ten minutes of setup and however
 long your sweep runs. If you've never looked at this repo before, read
-[GUIDE.md](GUIDE.md) first — this page assumes you know what a condition is.
+[GUIDE.md](GUIDE.md) first, this page assumes you know what a condition is.
 
 ---
 
@@ -21,7 +21,7 @@ a 0% edit rate, which is indistinguishable from a finding.**
 
 ## 1. Pick an id
 
-Short, lowercase, hyphenated, and descriptive of the *question* rather than the date —
+Short, lowercase, hyphenated, and descriptive of the *question* rather than the date ,
 `r4-permissions`, `r5-grok-replication`. Everything else keys off this string:
 
 ```
@@ -31,7 +31,7 @@ results/<id>.md                 your writeup
 ```
 
 `<model-slug>` is the model name with `/` replaced by `-`, e.g.
-`openrouter-anthropic-claude-sonnet-5`. Keeping models in separate directories matters —
+`openrouter-anthropic-claude-sonnet-5`. Keeping models in separate directories matters ,
 `summarize.py` pools everything under a log directory, so two models in one directory
 get silently averaged together.
 
@@ -74,7 +74,7 @@ inspect view --log-dir logs/<id>
 ```
 
 Export first, always. `exports/` is a flat, re-readable second copy of every diff and
-final document — it's what makes an accidental log deletion survivable.
+final document, it's what makes an accidental log deletion survivable.
 
 Then **read some diffs**. `edit_rate` saturates near 100% under an invitation and tells
 you almost nothing; the interesting columns are `change_ratio`, principles
@@ -83,12 +83,12 @@ added/deleted, and the content categories. See [viewing-results.md](viewing-resu
 ## 5. Write it up
 
 Create `results/<id>.md`. Follow [`results/r2-cheap.md`](../results/r2-cheap.md) as the
-template — one idea per section, a short plain-language takeaway at the end of each, and
+template, one idea per section, a short plain-language takeaway at the end of each, and
 a caveats section that's honest about sample size.
 
 Add a row to [`results/RUNLOG.md`](../results/RUNLOG.md).
 
-## 6. Register it — this step is enforced
+## 6. Register it, this step is enforced
 
 Add an entry to [`results/runs.yaml`](../results/runs.yaml):
 
@@ -99,7 +99,7 @@ Add an entry to [`results/runs.yaml`](../results/runs.yaml):
     models:
       - openrouter/anthropic/claude-sonnet-5
     runs: 48
-    cost_usd: 1.90          # actual, from summarize.py — not an estimate
+    cost_usd: 1.90          # actual, from summarize.py, not an estimate
     log_dir: logs/r4-permissions
     export_dir: exports/r4-permissions
     writeup: results/r4-permissions.md
@@ -124,7 +124,7 @@ off from the real ones.
 ## Two things worth knowing before you start
 
 **Costs are measured, not estimated.** OpenRouter returns an actual dollar cost on every
-API call and Inspect records it in the log. `summarize.py` prints the real total — put
+API call and Inspect records it in the log. `summarize.py` prints the real total, put
 that number in `runs.yaml`, not a guess.
 
 **Cross-model comparisons are descriptive, not causal.** Comparing two labs' models

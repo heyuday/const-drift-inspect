@@ -15,7 +15,7 @@ The immediate goal is **not** to fine-tune models or run recursive SFT loops. In
 
 The central question is:
 
-> **When models are given agency over the artifacts that govern or inform future models, what do they preserve, change, select, reject, or create—and how stable are those choices across prompts, models, and repeated runs?**
+> **When models are given agency over the artifacts that govern or inform future models, what do they preserve, change, select, reject, or create,and how stable are those choices across prompts, models, and repeated runs?**
 
 The experiment should measure both the **final artifact** and the **process that produced it**.
 
@@ -42,15 +42,15 @@ Inspect is useful here because the model can be evaluated as an **agent acting i
 
 The project begins with three main experiments.
 
-1. **Constitution Editing** — the model can modify a governing document.
-2. **Data Curation** — the model chooses which documents a future assistant should receive.
-3. **Free-Control Environment** — the model has several possible ways to influence a future assistant and chooses what to do.
+1. **Constitution Editing**, the model can modify a governing document.
+2. **Data Curation**, the model chooses which documents a future assistant should receive.
+3. **Free-Control Environment**, the model has several possible ways to influence a future assistant and chooses what to do.
 
 The same major experimental factors should be reused across all three whenever possible. This allows us to distinguish effects caused by the task itself from effects caused by prompt framing, reasoning, or model identity.
 
 ---
 
-# 4. Experiment 1 — Constitutional Self-Editing
+# 4. Experiment 1, Constitutional Self-Editing
 
 ## Question
 
@@ -93,7 +93,7 @@ Measure:
 
 ---
 
-# 5. Experiment 2 — Data Curation
+# 5. Experiment 2, Data Curation
 
 ## Question
 
@@ -139,7 +139,7 @@ These may diverge.
 
 ---
 
-# 6. Experiment 3 — Free-Control Agentic Environment
+# 6. Experiment 3, Free-Control Agentic Environment
 
 ## Question
 
@@ -442,7 +442,7 @@ For reasoning experiments, record only reasoning information actually exposed by
 
 Measurement should be layered rather than reduced immediately to one custom score.
 
-## Layer 1 — Direct Behavioral Measurements
+## Layer 1, Direct Behavioral Measurements
 
 Examples:
 
@@ -455,7 +455,7 @@ Examples:
 - consultation frequency,
 - and whether the model leaves the environment unchanged.
 
-## Layer 2 — Artifact Trajectory Measurements
+## Layer 2, Artifact Trajectory Measurements
 
 Examples:
 
@@ -466,7 +466,7 @@ Examples:
 - cross-model similarity,
 - and stability of selected document sets.
 
-## Layer 3 — Behavioral Consequences
+## Layer 3, Behavioral Consequences
 
 At selected rounds, supply the current constitution or selected corpus to a fresh model instance and run a fixed behavioral probe set.
 
@@ -478,7 +478,7 @@ from
 
 > **the artifact changed in a way that meaningfully changed behavior.**
 
-## Layer 4 — Value-Specific Analysis
+## Layer 4, Value-Specific Analysis
 
 Once the basic scaffold is working, add validated or well-motivated value/disposition measurements such as EigenBench-style dimensions or other external instruments.
 
@@ -564,7 +564,7 @@ Do critics, panels, or heterogeneous agents reduce or amplify drift relative to 
 
 Avoid immediately running the full Cartesian product of every factor.
 
-## Stage 1 — Validate the Scaffold
+## Stage 1, Validate the Scaffold
 
 Run small versions of:
 
@@ -576,7 +576,7 @@ Use a small number of models, starting artifacts, prompt conditions, and indepen
 
 The goal is to verify that the environment, logging, tools, persistence, and measurements work correctly.
 
-## Stage 2 — Prompt and Reasoning Sweep
+## Stage 2, Prompt and Reasoning Sweep
 
 Expand the most informative tasks across:
 
@@ -586,15 +586,15 @@ Expand the most informative tasks across:
 
 Identify which manipulations produce meaningful differences.
 
-## Stage 3 — Recursive Trajectories
+## Stage 3, Recursive Trajectories
 
 For the strongest conditions, run multiple artifact-only recursive rounds and study convergence, path direction, and fixed points.
 
-## Stage 4 — Multi-Agent Governance
+## Stage 4, Multi-Agent Governance
 
 Add critic, panel, finalizer, heterogeneous, and optional-consultation conditions.
 
-## Stage 5 — Broader Models and Larger Data
+## Stage 5, Broader Models and Larger Data
 
 Only after the experimental design is stable should the study scale to more model families, larger document pools, and more expensive behavioral evaluation.
 
@@ -665,5 +665,5 @@ always to build incrementally: start with the Inspect scaffolding and Experiment
 kept deliberately narrow, and let what Experiment 1 actually finds shape whether
 Experiments 2 and 3 are worth building at all.
 
-What was actually built and run is a strict subset of what's described here — see
+What was actually built and run is a strict subset of what's described here, see
 [`results/RUNLOG.md`](../../results/RUNLOG.md). 

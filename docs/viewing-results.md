@@ -8,9 +8,9 @@ Three places results live on disk, and they hold different things:
 
 | Location | What's there | Format |
 |---|---|---|
-| `logs/<sweep-name>/<model-slug>/*.eval` | **Everything** — every message, every tool call, token counts, cost, reasoning | Binary, needs the viewer or Python |
-| `exports/<sweep-name>/<model-slug>/runs.csv` | One row per run — the numbers, no text | Spreadsheet-openable |
-| `exports/<sweep-name>/<model-slug>/runs.jsonl` | One row per run — numbers **and** the full diff and final document as text | Plain text, greppable |
+| `logs/<sweep-name>/<model-slug>/*.eval` | **Everything**, every message, every tool call, token counts, cost, reasoning | Binary, needs the viewer or Python |
+| `exports/<sweep-name>/<model-slug>/runs.csv` | One row per run, the numbers, no text | Spreadsheet-openable |
+| `exports/<sweep-name>/<model-slug>/runs.jsonl` | One row per run, numbers **and** the full diff and final document as text | Plain text, greppable |
 | `exports/<sweep-name>/<model-slug>/diffs/*.diff` | Just the diff, one file per run | Plain text |
 | `exports/<sweep-name>/<model-slug>/constitutions/*.md` | The final document, one file per run | Plain text |
 
@@ -19,7 +19,7 @@ always has the complete record; `exports/` is a convenience copy.
 
 ---
 
-## Option 1 — the browser viewer (best for reading a transcript start to finish)
+## Option 1, the browser viewer (best for reading a transcript start to finish)
 
 ```bash
 inspect view --log-dir logs/r3-eb-seeds
@@ -32,18 +32,18 @@ in the left sidebar. You get:
 - The full back-and-forth: every message the model sent, every tool call it made
   (`text_editor view`, `text_editor str_replace`, `bash`, ...) and what came back
 - The model's **reasoning**, if the provider returned readable text (Sonnet and DeepSeek
-  do; gpt-5's comes back encrypted and unreadable — see [r3-eb-seeds.md](../results/r3-eb-seeds.md) §2 for
+  do; gpt-5's comes back encrypted and unreadable, see [r3-eb-seeds.md](../results/r3-eb-seeds.md) §2 for
   why)
 - The scorer's output at the bottom: `changed`, `change_ratio`, the full diff, the final
   document text, everything `scoring.py` and `content.py` recorded
 
 This is the only place to see the model's turn-by-turn behavior, not just the end state.
-Point it at any log directory — `logs/r2-cheap`, `logs/r3-eb-seeds`, all of `logs/` — and
+Point it at any log directory, `logs/r2-cheap`, `logs/r3-eb-seeds`, all of `logs/`, and
 it'll show everything underneath.
 
 Press Ctrl+C in the terminal to stop the server when you're done.
 
-## Option 2 — the exported files (best for scanning many runs fast)
+## Option 2, the exported files (best for scanning many runs fast)
 
 First, if a sweep hasn't been exported yet:
 
@@ -83,14 +83,14 @@ ls exports/r3-eb-seeds/openrouter-anthropic-claude-sonnet-5/diffs/ | grep conser
 cat exports/r3-eb-seeds/openrouter-openai-gpt-5/constitutions/<filename>.md
 ```
 
-**To search across every run for something specific** — e.g. every diff that mentions
+**To search across every run for something specific**, e.g. every diff that mentions
 "oversight":
 
 ```bash
 grep -l "oversight" exports/r3-eb-seeds/*/diffs/*.diff
 ```
 
-## Option 3 — Python, for anything the above two don't show
+## Option 3, Python, for anything the above two don't show
 
 Useful for: reading the model's reasoning text (not shown in `runs.csv`/`runs.jsonl`, only
 in the raw log), computing your own statistics, or checking something across dozens of
@@ -136,7 +136,7 @@ print(score.metadata)   # everything: changed, ratio, diff, final text, categori
 ```
 
 **Run `scripts/summarize.py` for the per-condition tables** (edit%, ratio, content
-categories, cost — what's quoted in every RESULTS file):
+categories, cost, what's quoted in every RESULTS file):
 
 ```bash
 python3 scripts/summarize.py --log-dir logs/r3-eb-seeds/openrouter-anthropic-claude-sonnet-5
@@ -165,8 +165,8 @@ counts, is [`results/runs.yaml`](../results/runs.yaml).
 
 The "reasoning" shown in the viewer or pulled via `ContentReasoning` is a **model-generated
 summary of its own process**, provided by the API, not a raw unedited internal log. Treat
-it as the model's account of what it was doing — informative, and in several cases (see
+it as the model's account of what it was doing, informative, and in several cases (see
 [r3-eb-seeds.md](../results/r3-eb-seeds.md) §1, the Sonnet "outlier" example) genuinely detailed and
-specific — but not a guaranteed ground-truth trace. And for gpt-5 specifically, on this
+specific, but not a guaranteed ground-truth trace. And for gpt-5 specifically, on this
 project's OpenRouter routing, the reasoning field comes back **encrypted** and unreadable;
 only Sonnet's and DeepSeek's are plain text.

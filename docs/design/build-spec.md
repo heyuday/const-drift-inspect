@@ -1,4 +1,4 @@
-# Constitutional Drift — Experiment 1 Build Specification
+# Constitutional Drift, Experiment 1 Build Specification
 
 ## Purpose of this document
 
@@ -8,7 +8,7 @@ The larger research program includes data curation, free-control environments, r
 
 The research question is:
 
-> When a current language model is given meaningful but bounded authority over a governing document for an AI assistant, what does it preserve, change, add, remove, or reprioritize — and how sensitive are those choices to the framing of that authority?
+> When a current language model is given meaningful but bounded authority over a governing document for an AI assistant, what does it preserve, change, add, remove, or reprioritize, and how sensitive are those choices to the framing of that authority?
 
 There is **no SFT, LoRA, preference optimization, or weight update** in this experiment.
 
@@ -25,8 +25,8 @@ There is no single canonical “AI constitution.” Adjacent research uses sever
 Anthropic’s earlier Constitutional AI work used a list of natural-language principles, drawing from sources including the Universal Declaration of Human Rights, safety practices, DeepMind’s Sparrow rules, non-Western perspectives, and internally developed principles. Anthropic also reported that highly specific, long principles were not always better: broader principles could generalize better, while more detailed principles offered finer control.
 
 Sources:
-- [Anthropic — Claude’s Constitution (2023)](https://www.anthropic.com/research/claudes-constitution)
-- [Kundu et al. — Specific versus General Principles for Constitutional AI](https://arxiv.org/abs/2310.13798)
+- [Anthropic, Claude’s Constitution (2023)](https://www.anthropic.com/research/claudes-constitution)
+- [Kundu et al., Specific versus General Principles for Constitutional AI](https://arxiv.org/abs/2310.13798)
 
 **Use for this project:** strong source bank and methodological precedent. It is not an ideal default C0 because it contains Anthropic-specific choices and several principles explicitly targeting AI self-interest, power, identity, and long-run risk. Those are precisely some of the things we may later want to observe models choosing for themselves.
 
@@ -36,7 +36,7 @@ Anthropic’s current constitution is a long, reasoning-rich document describing
 
 Sources:
 - [Claude’s Constitution](https://www.anthropic.com/constitution)
-- [Claude’s new constitution — research note](https://www.anthropic.com/research/claude-new-constitution)
+- [Claude’s new constitution, research note](https://www.anthropic.com/research/claude-new-constitution)
 - [Public CC0 repository](https://github.com/anthropics/claude-constitution)
 
 **Use for this project:** excellent comparison artifact and later robustness seed. It should *not* be the sole default C0 for the first cross-model experiment because it is long, strongly Anthropic-specific, contains an explicit principal hierarchy, and discusses Claude’s own identity and corrigibility. Using it as C0 would make the experiment partly “how other models edit Anthropic’s Claude constitution” rather than “what does the model add to a relatively open governing document?”
@@ -47,7 +47,7 @@ The Model Spec is a public behavior specification containing objectives, instruc
 
 Sources:
 - [OpenAI Model Spec](https://model-spec.openai.com/)
-- [OpenAI — Inside our approach to the Model Spec](https://openai.com/index/our-approach-to-the-model-spec/)
+- [OpenAI, Inside our approach to the Model Spec](https://openai.com/index/our-approach-to-the-model-spec/)
 
 **Use for this project:** another valuable provider-specific comparison artifact. It is not a neutral seed because its hierarchy and platform-specific objectives are substantive design choices.
 
@@ -73,7 +73,7 @@ Sources:
 The UDHR provides a widely used external normative source centered on dignity, equality, liberty, security, privacy, expression, and other human rights. Anthropic explicitly drew from it in earlier CAI work.
 
 Source:
-- [United Nations — Universal Declaration of Human Rights](https://www.un.org/en/about-us/universal-declaration-of-human-rights)
+- [United Nations, Universal Declaration of Human Rights](https://www.un.org/en/about-us/universal-declaration-of-human-rights)
 
 **Use for this project:** good external grounding for rights-related principles, but it was written for human rights and institutions, not as a behavior specification for an AI assistant. It should therefore inform a seed rather than be copied wholesale as the AI constitution.
 
@@ -113,7 +113,7 @@ Source:
 Anthropic extracted a taxonomy of 3,307 values expressed by Claude across hundreds of thousands of real-world interactions. This is observational: it tells us what value concepts appear in behavior, not which values are normatively correct.
 
 Sources:
-- [Anthropic — Values in the Wild](https://www.anthropic.com/research/values-wild)
+- [Anthropic, Values in the Wild](https://www.anthropic.com/research/values-wild)
 - [Released dataset](https://huggingface.co/datasets/Anthropic/values-in-the-wild)
 
 **Use for this project:** promising vocabulary/taxonomy for *labeling what changed* after an edit. Do not use it as ground truth for what a constitution should contain.
@@ -319,7 +319,7 @@ means ten independent edit trajectories from the same starting constitution unde
 
 Do not interpret a single run as “the model’s preferred constitution.” The distribution across independent runs is part of the result.
 
-Recursive artifact-only drift — C0 → C1 → C2 with a fresh context each round — should be implemented only after the single-step task and extraction pipeline are validated.
+Recursive artifact-only drift, C0 → C1 → C2 with a fresh context each round, should be implemented only after the single-step task and extraction pipeline are validated.
 
 ---
 
@@ -448,7 +448,7 @@ The v1 build is done when all of the following are true:
 
 ---
 
-# 13. Future roadmap — document only, do not implement
+# 13. Future roadmap, document only, do not implement
 
 Once Experiment 1 is stable:
 
@@ -496,16 +496,16 @@ Only after the single-agent baseline is understood, add editor/critic/finalizer 
 # 15. Primary references consulted for this design
 
 ### Constitutions / model behavior
-- [Anthropic — Claude’s Constitution (2023)](https://www.anthropic.com/research/claudes-constitution)
-- [Anthropic — Claude’s Constitution (2026)](https://www.anthropic.com/constitution)
-- [Anthropic — Collective Constitutional AI](https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input)
-- [OpenAI — Model Spec](https://model-spec.openai.com/)
-- [Google DeepMind — Building safer dialogue agents / Sparrow](https://deepmind.google/blog/building-safer-dialogue-agents/)
-- [United Nations — Universal Declaration of Human Rights](https://www.un.org/en/about-us/universal-declaration-of-human-rights)
-- [Kundu et al. — Specific versus General Principles for Constitutional AI](https://arxiv.org/abs/2310.13798)
+- [Anthropic, Claude’s Constitution (2023)](https://www.anthropic.com/research/claudes-constitution)
+- [Anthropic, Claude’s Constitution (2026)](https://www.anthropic.com/constitution)
+- [Anthropic, Collective Constitutional AI](https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input)
+- [OpenAI, Model Spec](https://model-spec.openai.com/)
+- [Google DeepMind, Building safer dialogue agents / Sparrow](https://deepmind.google/blog/building-safer-dialogue-agents/)
+- [United Nations, Universal Declaration of Human Rights](https://www.un.org/en/about-us/universal-declaration-of-human-rights)
+- [Kundu et al., Specific versus General Principles for Constitutional AI](https://arxiv.org/abs/2310.13798)
 
 ### Values / evaluation resources
-- [Anthropic — Values in the Wild](https://www.anthropic.com/research/values-wild)
+- [Anthropic, Values in the Wild](https://www.anthropic.com/research/values-wild)
 - [Open Character Training dataset](https://huggingface.co/datasets/invi-bhagyesh/OpenCharacterTraining-data)
 - [EigenBench](https://openreview.net/pdf?id=fm79KXJIUQ)
 - [World Values Survey](https://www.worldvaluessurvey.org/WVSContents.jsp?CMSID=Documentation)

@@ -8,13 +8,13 @@ logs back out afterwards.
 
 | Script | What it does |
 |---|---|
-| `run_experiment.sh` | **Start here.** Runs an experiment end to end — two evals, then summarize and export. Takes `MODEL=` as an env override and epochs as `$1`. Copy it as the starting point for a new experiment. |
+| `run_experiment.sh` | **Start here.** Runs an experiment end to end, two evals, then summarize and export. Takes `MODEL=` as an env override and epochs as `$1`. Copy it as the starting point for a new experiment. |
 | `summarize.py` | Prints per-condition results tables (edit%, change ratio, content categories, cost) from any log directory. `--by task,seed` controls grouping. |
-| `export_runs.py` | Flattens a log directory into `runs.csv`, `runs.jsonl`, plus every diff and final document as its own file. Run this after every sweep — it's the backup that makes a lost log survivable. |
+| `export_runs.py` | Flattens a log directory into `runs.csv`, `runs.jsonl`, plus every diff and final document as its own file. Run this after every sweep, it's the backup that makes a lost log survivable. |
 | `check_docs.py` | Fails if `results/runs.yaml` and the filesystem disagree. Wire it into CI. |
 | `toy_eval.py` | 3-sample preflight: does this model resolve, authenticate, and call tools? Costs a fraction of a cent, no Docker. Run it before spending on a new model. |
 | `fetch_eigenbench_seeds.py` | Downloads and converts the three `c0_eb_*` seeds, which are gitignored rather than committed. Run once after cloning. |
-| `models.sh` | Not executable — a config file the others `source`. Model roster with prices, plus the four required flags. |
+| `models.sh` | Not executable, a config file the others `source`. Model roster with prices, plus the four required flags. |
 
 ## Diagnostics
 
