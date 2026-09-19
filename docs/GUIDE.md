@@ -3,7 +3,41 @@
 This is the **single orientation document**: read it first, and you should not need the
 others to understand what exists.
 
-Where everything else lives:
+## Repository structure
+
+```
+constitutional_drift/   THE EXPERIMENT. Five Python files: the factor grid, every prompt
+                        the model sees, the task wiring, and the two scorers. Part 2
+                        walks through each one.
+data/constitutions/     The starting documents ("seeds") a model is asked to edit.
+                        Five of them; the three c0_eb_* are fetched, not committed.
+scripts/                Runners and analysis tools. Start at scripts/README.md.
+tests/                  123 unit tests (no API calls) + smoke.py, an end-to-end check
+                        against real Docker using a fake model. Free to run.
+results/                One writeup per experiment, plus runs.yaml — the index that
+                        scripts/check_docs.py validates against disk.
+docs/                   This guide, two how-tos, and docs/design/ for the original
+                        research design and rationale.
+
+compose.yaml            The Docker sandbox each run gets: bare, no network.
+pyproject.toml          Dependencies and pytest config. `pip install -e ".[dev]"`.
+.env.example            Template — copy to .env and add your OPENROUTER_API_KEY.
+```
+
+Gitignored, so none of it arrives with a fresh clone:
+
+```
+logs/                   Raw .eval logs. ⚠️ THE ONLY COPY of a completed run — re-running
+                        one costs real money. Never bulk-delete; move to logs/_archive/.
+                        logs/_archive/ holds earlier exploratory runs.
+exports/                Flattened logs: runs.csv, diffs, final documents. Regenerate with
+                        scripts/export_runs.py — this is your backup if a log is lost.
+.env                    Your real API key. Not recoverable, not shared. ⚠️
+constitutional_drift.egg-info/   Editable-install metadata, written by pip. Disposable.
+.pytest_cache/ .smoke-logs/      Test scratch. Disposable.
+```
+
+## Which document to read
 
 | File | What it is |
 |---|---|
