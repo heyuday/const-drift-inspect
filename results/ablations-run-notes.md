@@ -1,5 +1,23 @@
 # Ablation run notes, night of Oct 20-21
 
+> **Update: the grid is now complete.** After the limit was raised, the 9 missing cells ran
+> (GPT-5 blind, self-draft, ungoverned-spec and full-authority-spec; Sonnet blind, self-draft
+> and full authority on the spec seed) for $18.89. The DeepSeek ungoverned spec-seed retry hit
+> rate limits again, so the original attempt is kept. The report reflects all 40 cells.
+>
+> What changed from the numbers below:
+> - **Blind step.** It now shifts where chains end for all four models (Sonnet p = 0.002,
+>   GPT-5 p = 0.001), not just Qwen and DeepSeek. The blind arm has the smallest seed gap for
+>   every model.
+> - **Full authority.** It shifts GPT-5 too (p = 0.034).
+> - **Self-draft.** It shifts only Qwen. Sonnet's and GPT-5's self-drafts keep the spec seed's
+>   oversight in every chain, so Qwen's loss stands alone.
+> - **Daniel's attractor.** Only the blind arm matches his caution values: Sonnet 2.62,
+>   Qwen 2.25. Sonnet's self-draft is now just outside, at 3.25.
+> - **GPT-5 damping.** With both seeds, the edit rate goes from 93% to 70%.
+> - **Steps.** 4.88, 1.19, 0.61, then 0.
+> - **Variance over all 40 cells.** Model 27%, seed 17%, arm 7.5%.
+
 Full report with figures, tables, examples and caveats: `reports/ablations/report.html`
 (published privately at https://claude.ai/artifact/BwHDWbY5pjiMmGeiWvgtrX).
 

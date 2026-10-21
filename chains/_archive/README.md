@@ -23,3 +23,7 @@ Neither is large enough to support a claim. For results see
   were rerun under the same names pinned to DeepInfra (`scripts/overnight.py`,
   MODEL_ARGS), which also served all of DeepSeek's September chains. Kept as the record of
   the fault; nothing here is a result.
+
+- **`ratelimit-2026-10-21/retry/`**: a retry of DeepSeek's ungoverned spec-seed cell. All four
+  chains failed at round 3 on DeepInfra rate limits. The original attempt, which has one complete
+  chain and three that reach round 4, is the one kept under `chains/abl-ungoverned-spec/`.

@@ -592,6 +592,7 @@ def analyse(repo: Path = REPO) -> dict:
     pts_all = [({"model": m, "arm": a, "seed": s}, p) for (a, s, m), v in ends.items() for p in v]
     cheap = [x for x in pts_all if x[0]["model"] in (DEEPSEEK, QWEN)]
     decomp = {
+        "full_grid": decompose(pts_all, ["model", "arm", "seed"]),
         "cheap_grid": decompose(cheap, ["model", "arm", "seed"]),
         "base_all_models": decompose([x for x in pts_all if x[0]["arm"] == "base"], ["model", "seed"]),
         "edit_arms_minimal_all_models": decompose(
@@ -1155,7 +1156,8 @@ def render(n: dict, notes: dict | None = None, examples: list | None = None) -> 
 
     dec_rows = []
     dec_names = {
-        "cheap_grid": "DeepSeek + Qwen, full grid",
+        "full_grid": "All four models, all arms, both seeds",
+        "cheap_grid": "DeepSeek + Qwen, all arms",
         "base_all_models": "Base arm, all four models",
         "edit_arms_minimal_all_models": "Base vs ungoverned, minimal seed, all models",
         f"arms_{DEEPSEEK}": "DeepSeek only, all arms",
