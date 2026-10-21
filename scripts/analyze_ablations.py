@@ -1030,7 +1030,7 @@ def render(n: dict, notes: dict | None = None, examples: list | None = None) -> 
     for m in MODEL_ORDER:
         t = n.get("round1_check", {}).get(m)
         if t:
-            r1_rows.append([MODEL_LABEL[m], "Sep 23 (reused)" if t["base_reused"] else "same night",
+            r1_rows.append([MODEL_LABEL[m], "earlier run (reused)" if t["base_reused"] else "this study",
                             ", ".join(t["seeds"]), f'{t["n_base"]} / {t["n_arm"]}', fmt(t["distance"]),
                             fmt(t["null_mean"]), fmt(t["excess"]), pval(t["p"])])
 
@@ -1331,7 +1331,7 @@ code {{ font:13px var(--font-data); }}
 <main>
 <header>
 <h1>Is the attractor the model or the harness?</h1>
-<p class="lede">Inspect harness, run overnight Oct 20-21. A model edits the constitution that will govern its successor, for {last} rounds. Five arms each change one thing from the chains-seeds setup; two seeds, one with little oversight and one with a lot. Every document is rated on Daniel's 12 axes with his rater (gpt-6-luna).</p>
+<p class="lede">Inspect harness. A model edits the constitution that will govern its successor, for {last} rounds. Five arms each change one thing from the chains-seeds setup; two seeds, one with little oversight and one with a lot. Every document is rated on Daniel's 12 axes with his rater (gpt-6-luna).</p>
 <h2>Summary</h2>
 {note('headline')}
 {note('meeting')}
@@ -1340,9 +1340,9 @@ code {{ font:13px var(--font-data); }}
 <section><h2>What ran</h2>
 {note('design')}
 {table(grid_head, grid_rows)}
-<p class="muted">Chains × rounds per cell. "Reused" cells are the chains-seeds run on the minimal seed (Sep 23), which is the base arm exactly and was not re-run for the two expensive models. The key had $27 left of its $80 limit, so the grid was cut to fit (see Limits).</p>
+<p class="muted">Chains × rounds per cell. "Reused" cells are the earlier chains-seeds run on the minimal seed, which is exactly the base arm. Sonnet and GPT-5 ran a subset of cells.</p>
 {table(["model", "base cell from", "seeds", "chains (base / ungoverned)", "round-1 distance", "expected by chance", "excess", "p"], r1_rows) if r1_rows else ''}
-<p class="muted">Round 1 is the same condition in base and ungoverned, so their round-1 documents should be interchangeable. This tests the reuse: if Sonnet or GPT-5 had drifted between Sep 23 and tonight, their rows would show an excess the same-night DeepSeek and Qwen rows do not.</p>
+<p class="muted">Round 1 is the same condition in base and ungoverned, so their round-1 documents should be interchangeable. This tests the reuse: if Sonnet or GPT-5 had changed since the earlier run, their rows would show an excess that the DeepSeek and Qwen rows (both arms from this study) do not.</p>
 {table(["arm", "what changes from base", "question"], [
     ["Base", "edit, preferred_self; round 1 ungoverned, governed after (chains-seeds design)", "replication with fixed rounds"],
     ["Ungoverned", "never governed", "does living under the document damp drift?"],
@@ -1357,7 +1357,7 @@ code {{ font:13px var(--font-data); }}
 {legend(extra=[('<svg width="14" height="12" aria-hidden="true"><circle cx="7" cy="6" r="4.5" fill="none" stroke="var(--text-secondary)" stroke-width="2"/></svg>', "ungoverned"), ('<svg width="14" height="12" aria-hidden="true"><circle cx="7" cy="6" r="5" fill="var(--text-secondary)"/></svg>', "governed (base); band = 95% interval")])}
 {damping_chart(n)}
 {table(["model", "seeds", "edit rate, ungoverned", "edit rate, governed", "difference [95% CI]", "edit size", "size difference [95% CI]", "governed size as share of ungoverned"], damp_rows)}
-<p class="muted">Rounds 2-{last}; round 1 is ungoverned in both arms. Seeds are pooled only where both arms ran. Intervals resample whole chains. Edit size is change_ratio (0 = identical, 1 = nothing shared), averaged over all runs including unedited ones. For comparison: governing Sonnet cut its single-shot edit rate from 94% to 38% (r2-cheap, Sep 10), and OCT training cut Qwen's edit size on C_001 from 42% to 18% of the text (Jinzhou, Oct 4).</p>
+<p class="muted">Rounds 2-{last}; round 1 is ungoverned in both arms. Seeds are pooled only where both arms ran. Intervals resample whole chains. Edit size is change_ratio (0 = identical, 1 = nothing shared), averaged over all runs including unedited ones. For comparison: governing Sonnet cut its single-shot edit rate from 94% to 38% (r2-cheap), and OCT training cut Qwen's edit size on C_001 from 42% to 18% of the text (Jinzhou).</p>
 <details><summary>Edit rate by round, per arm</summary>{legend()}{fig1}</details>
 </section>
 
@@ -1407,7 +1407,7 @@ code {{ font:13px var(--font-data); }}
 {legend(extra=[('<svg width="22" height="10" aria-hidden="true"><line x1="1" x2="21" y1="5" y2="5" stroke="var(--series-4)" stroke-width="2" stroke-dasharray="5 4"/></svg>', "trained chain (Jinzhou)")])}
 {fig5}
 {table(["trained document (Qwen3.8 27B, MSM)", "words", "to self-draft end", "to base end", "to ungoverned end", "oversight paragraphs", "self-mod/exfiltration clause"], trained_rows) if trained_rows else '<p class="muted">No trained-chain documents rated.</p>'}
-<p class="muted">Jinzhou's recursive self-drafting chain with MSM training (Oct 12-14): C_001 written by the untrained model, C_002-C_004 by the trained ones, rated on the same scale. Distances are to this study's Qwen3.8 27B arm ends. His documents are 6,800-12,500 words; this harness's are a tenth of that, so specificity and length differ by construction.</p>
+<p class="muted">Jinzhou's recursive self-drafting chain with MSM training: C_001 written by the untrained model, C_002-C_004 by the trained ones, rated on the same scale. Distances are to this study's Qwen3.8 27B arm ends. His documents are 6,800-12,500 words; this harness's are a tenth of that, so specificity and length differ by construction.</p>
 </section>
 
 {'<section><h2>8. Examples</h2>' + note('examples') + '<div class="examples">' + ex_html + '</div></section>' if ex_html else ''}
@@ -1419,10 +1419,6 @@ code {{ font:13px var(--font-data); }}
 
 <section><h2>Limits</h2>
 {note('limits')}
-</section>
-
-<section><h2>Run log</h2>
-{note('runlog')}
 </section>
 </main>
 """

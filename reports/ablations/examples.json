@@ -72,15 +72,5 @@
     "source": "Sonnet 5, ungoverned, minimal seed, chain 4"
    }
   ]
- },
- {
-  "title": "The DeepSeek provider problem",
-  "context": "DeepSeek served by CoreWeave: the tool call came back as text inside the reasoning field, with no actual tool call, so the run looked like the model did nothing. These runs were redone on DeepInfra.",
-  "quotes": [
-   {
-    "text": "I need to first inspect the constitution document to understand its current content and structure before making any changes.｜tool▁calls▁begin｜｜tool▁call▁begin｜text_editor｜tool▁sep｜{\"command\": \"view\", \"path\": \"/workspace/constitution.md\"}",
-    "source": "reasoning field of an archived DeepSeek turn (finish_reason: stop, content empty)"
-   }
-  ]
  }
 ]
