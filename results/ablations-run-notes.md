@@ -16,9 +16,9 @@ Full report with figures, tables, examples and caveats: `reports/ablations/repor
   fifth and GPT-5's edit rate by 25 points, does nothing to Sonnet (80% vs 82%), and never
   changes where any model ends (excess 0, p 0.76-0.95). The parallel to training holds for
   damping only, and only for some models.
-- **The preferred_self framing is the biggest lever.** Under neutral full authority, Sonnet
-  and GPT-5 rewrite once and then almost never edit again (Sonnet 1 edit in 20 runs), and
-  chains from the two seeds stop converging.
+- **The preferred_self framing is the biggest lever.** Under neutral full authority every
+  model edits far less after round 1 (rounds 2-6: Sonnet 5%, GPT-5 20%, DeepSeek 10%, Qwen
+  22% of runs, against 82%, 70%, 28%, 65% under base), and the two seeds stop converging.
 - **Oversight is approached from both sides.** Sonnet rises from 4 to 5.9 on the minimal
   seed and eases from 7 to 6.75 on the spec seed. No edit-arm chain deleted the spec's
   off-switch, and Sonnet and GPT-5 reinforced it. The only losses are in Qwen's untrained
