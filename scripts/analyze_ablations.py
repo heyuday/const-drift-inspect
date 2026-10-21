@@ -423,19 +423,25 @@ def seed_balanced_centroid(points_by_seed: dict[str, list[list[float]]]):
     return mean_vec(cs)
 
 
-def perm_arm_vs_base(ends, arm, model, n=2000, seed=0):
-    """Distance between arm and base round-6 centroids, with a stratified permutation test.
+# The comparisons the design was built for: each arm against the arm it differs from by
+# one change. Blind is ungoverned plus the view-first turn, so it is compared with
+# ungoverned, not with base.
+CONTRASTS = [("ungoverned", "base"), ("full_authority", "base"), ("blind", "ungoverned"), ("self_draft", "base")]
+
+
+def perm_arm_vs_base(ends, arm, model, n=2000, seed=0, ref="base"):
+    """Distance between arm and ref round-6 centroids, with a stratified permutation test.
 
     Both centroids weight the seeds equally, and only seeds both arms ran are used.
     Permutations shuffle arm labels among chains within each seed, so the null keeps
     the seed structure. `excess` subtracts the null's mean squared distance, which is
     what chain-to-chain spread and rater noise alone produce at these sample sizes.
     """
-    seeds = [s for s in SEEDS if ends.get((arm, s, model)) and ends.get(("base", s, model))]
+    seeds = [s for s in SEEDS if ends.get((arm, s, model)) and ends.get((ref, s, model))]
     if not seeds:
         return None
     a = {s: ends[(arm, s, model)] for s in seeds}
-    b = {s: ends[("base", s, model)] for s in seeds}
+    b = {s: ends[(ref, s, model)] for s in seeds}
     obs = dist(seed_balanced_centroid(a), seed_balanced_centroid(b))
     rng = random.Random(seed)
     null = []
@@ -558,6 +564,12 @@ def analyse(repo: Path = REPO) -> dict:
             t = perm_arm_vs_base(ends, arm, model)
             if t:
                 vs_base[(arm, model)] = t
+    contrasts = {}
+    for arm, ref in CONTRASTS:
+        for model in MODEL_ORDER:
+            t = perm_arm_vs_base(ends, arm, model, ref=ref)
+            if t:
+                contrasts[(arm, ref, model)] = t
     # Round 1 is the same condition in base and ungoverned (both ungoverned), so their
     # round-1 documents should be exchangeable. For Sonnet and GPT-5 the base cell is the
     # Sep 23 run, so this is also the check that the reuse is sound: a month of drift in
@@ -734,6 +746,7 @@ def analyse(repo: Path = REPO) -> dict:
         "seed_gap": {f"{a}|{m}": v for (a, m), v in seed_gap.items()},
         "within_seed_spread": {f"{a}|{m}": v for (a, m), v in within.items()},
         "final_vs_base": {f"{a}|{m}": v for (a, m), v in vs_base.items()},
+        "contrasts": {f"{a}|{r}|{m}": v for (a, r, m), v in contrasts.items()},
         "round1_check": round1_check,
         "between_model_base_ends": between_models,
         "final_centroids": {f"{a}|{m}": v for (a, m), v in final_c.items()},
@@ -1133,11 +1146,11 @@ def render(n: dict, notes: dict | None = None, examples: list | None = None) -> 
         ])
 
     end_rows = []
-    for m in MODEL_ORDER:
-        row = [MODEL_LABEL[m]]
-        for arm in ARMS[1:]:
-            t = n["final_vs_base"].get(f"{arm}|{m}")
-            row.append(f'{fmt(t["distance"])} <span class="muted">(excess {fmt(t["excess"])}, p {pval(t["p"])})</span>' if t else "–")
+    for arm, ref in CONTRASTS:
+        row = [f"{ARM_LABEL[arm]} vs {ARM_LABEL[ref].lower()}"]
+        for m in MODEL_ORDER:
+            t = n["contrasts"].get(f"{arm}|{ref}|{m}")
+            row.append(f'{fmt(t["excess"])} <span class="muted">(raw {fmt(t["distance"])}, p {pval(t["p"])})</span>' if t else "–")
         end_rows.append(row)
 
     dec_rows = []
@@ -1340,7 +1353,7 @@ code {{ font:13px var(--font-data); }}
 ], cls="text")}
 </section>
 
-<section><h2>1. Being governed by the document cuts editing</h2>
+<section><h2>1. Does being governed by the document damp editing?</h2>
 {note('damping')}
 {legend(extra=[('<svg width="14" height="12" aria-hidden="true"><circle cx="7" cy="6" r="4.5" fill="none" stroke="var(--text-secondary)" stroke-width="2"/></svg>', "ungoverned"), ('<svg width="14" height="12" aria-hidden="true"><circle cx="7" cy="6" r="5" fill="var(--text-secondary)"/></svg>', "governed (base); band = 95% interval")])}
 {damping_chart(n)}
@@ -1379,8 +1392,8 @@ code {{ font:13px var(--font-data); }}
 {plane_chart(n)}
 {table(["subset of round-%d documents" % last, "documents", "model", "arm", "seed", "within cell", "rater noise alone"], dec_rows)}
 <p class="muted">Share of the total sum of squares of round-{last} positions (12 axes) that each factor's group means account for; p from permuting that factor's labels within the strata of the others. "Within cell" is chain-to-chain spread plus rater noise; "rater noise alone" is what {fmt(nz['single'])} of noise per rating would contribute.</p>
-{table(["model"] + [f"{ARM_LABEL[a]} vs base" for a in ARMS[1:]], end_rows)}
-<p class="muted">Distance between each arm's round-{last} centroid and base's, seeds weighted equally and matched. "Excess" subtracts the distance chain-to-chain spread and rater noise alone produce at these sample sizes (the permutation null); p from shuffling arm labels between chains within each seed. Models' base-arm ends sit {fmt(sum(bm) / len(bm)) if bm else '–'} apart on average.</p>
+{table(["the one change", *[MODEL_LABEL[m] for m in MODEL_ORDER]], end_rows)}
+<p class="muted">How far each change moves where chains end: the distance between the two arms' round-{last} centroids (12 axes), seeds weighted equally and matched, minus what chain-to-chain spread and rater noise alone produce at these sample sizes (the permutation null). 0 means no shift beyond chance. p from shuffling arm labels between chains within each seed. For scale, models' base-arm ends sit {fmt(sum(bm) / len(bm)) if bm else '–'} apart on average.</p>
 {table(["model", "axis", "Daniel's attractor [90%]", "his blind drafts", "this study's arm ends, range", "this study's blind views"], plane_rows) if plane_rows else ''}
 </section>
 
@@ -1407,6 +1420,10 @@ code {{ font:13px var(--font-data); }}
 
 <section><h2>Limits</h2>
 {note('limits')}
+</section>
+
+<section><h2>How the night went</h2>
+{note('runlog')}
 </section>
 </main>
 """

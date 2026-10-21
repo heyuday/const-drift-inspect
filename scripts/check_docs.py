@@ -33,7 +33,9 @@ RUNS_YAML = REPO / "results" / "runs.yaml"
 # Directories under logs/ that are not experiments.
 #   _archive  earlier exploratory runs, kept for provenance
 #   smoke     output of tests/smoke.py, regenerated freely
-SKIP_LOG_DIRS = {"_archive", "smoke"}
+#   overnight scripts/overnight.py's own launcher and per-cell logs; the runs it
+#             launches live under chains/abl-*/ and have their own entries
+SKIP_LOG_DIRS = {"_archive", "smoke", "overnight"}
 
 # Fields every entry must carry. `inspect_version` is intentionally not required —
 # it is a known TODO that isn't recorded at run time yet.
