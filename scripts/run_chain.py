@@ -54,17 +54,40 @@ MODEL_FLAGS = [
     "--reasoning-effort", "high",
 ]
 
-# The condition, held constant for every run of every chain. Only `embodiment` varies,
-# and only between round 1 and the rest.
+# The condition, held constant for every run of every chain. `task`, `authority` and
+# `deliberation` are set per run (see ARM_DEFAULTS); `embodiment` varies only between
+# round 1 and the rest.
 FIXED_CONDITION = [
-    "-T", "task=edit_directed",
     "-T", "tools=editor",
-    "-T", "authority=preferred_self",
     "-T", "identity=future_same",
     "-T", "mechanism=post_training_replacement",
     "-T", "permissions=full",
-    "-T", "deliberation=none",
 ]
+
+# Per-run condition settings, stored in state.json. These defaults are the original
+# chains-main / chains-seeds design, so a state.json written before these settings
+# existed resumes exactly as it ran.
+ARM_DEFAULTS = {
+    "task": "edit_directed",
+    "authority": "preferred_self",
+    "deliberation": "none",
+    "round1_embodiment": "none",
+    "embodiment": "governed",
+}
+
+
+def arm_condition(state: dict[str, Any]) -> list[str]:
+    arm = {**ARM_DEFAULTS, **state.get("arm", {})}
+    return [
+        "-T", f"task={arm['task']}",
+        "-T", f"authority={arm['authority']}",
+        "-T", f"deliberation={arm['deliberation']}",
+    ]
+
+
+def arm_embodiment(state: dict[str, Any], round_no: int) -> str:
+    arm = {**ARM_DEFAULTS, **state.get("arm", {})}
+    return arm["round1_embodiment"] if round_no == 1 else arm["embodiment"]
 
 ACTIVE, CONVERGED, FAILED = "active", "converged", "failed"
 
@@ -109,6 +132,10 @@ def new_state(args: argparse.Namespace) -> dict[str, Any]:
         "n_chains": args.chains,
         "max_rounds": args.rounds,
         "stop_after": args.stop_after,
+        "arm": {k: getattr(args, k) for k in ARM_DEFAULTS},
+        # Extra `-M` model args (e.g. an OpenRouter provider pin), kept in state so a
+        # resumed run is routed exactly as it started.
+        "model_args": list(args.model_arg),
         "rounds_completed": 0,
         "chains": {
             chain_id(i): {
@@ -145,9 +172,11 @@ def run_round(
     model: str,
     seeds: list[str],
     embodiment: str,
+    condition: list[str],
     epochs: int,
     log_dir: Path,
     seeds_dir: Path,
+    model_args: list[str] = (),
 ) -> None:
     """Invoke `inspect eval` for one round. Raises if the process fails."""
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -155,7 +184,9 @@ def run_round(
         "inspect", "eval", TASK,
         "--model", model,
         *MODEL_FLAGS,
+        *[x for arg in model_args for x in ("-M", arg)],
         *FIXED_CONDITION,
+        *condition,
         "-T", f"seed={','.join(seeds)}",
         "-T", f"embodiment={embodiment}",
         "--epochs", str(epochs),
@@ -367,6 +398,21 @@ def main() -> int:
     parser.add_argument(
         "--root", default="chains", help="output root directory"
     )
+    parser.add_argument("--task", default=ARM_DEFAULTS["task"],
+                        choices=["edit_directed", "self_draft"])
+    parser.add_argument("--authority", default=ARM_DEFAULTS["authority"])
+    parser.add_argument("--deliberation", default=ARM_DEFAULTS["deliberation"],
+                        choices=["none", "explicit", "blind"])
+    parser.add_argument("--round1-embodiment", dest="round1_embodiment",
+                        default=ARM_DEFAULTS["round1_embodiment"],
+                        choices=["none", "governed"],
+                        help="embodiment at round 1 (governed = seed in system message)")
+    parser.add_argument("--embodiment", default=ARM_DEFAULTS["embodiment"],
+                        choices=["none", "governed"],
+                        help="embodiment from round 2 on")
+    parser.add_argument("--model-arg", dest="model_arg", action="append", default=[],
+                        help="extra `-M key=value` for inspect eval, e.g. an OpenRouter "
+                             "provider pin; repeatable, recorded in state.json")
     args = parser.parse_args()
 
     if args.chains < 1 or args.rounds < 1 or args.stop_after < 1:
@@ -404,10 +450,12 @@ def main() -> int:
         run_round(
             model=state["model"],
             seeds=[state["c0"]] if first else live,
-            embodiment="none" if first else "governed",
+            embodiment=arm_embodiment(state, round_no),
+            condition=arm_condition(state),
             epochs=state["n_chains"] if first else 1,
             log_dir=round_dir / "logs",
             seeds_dir=seeds_dir,
+            model_args=state.get("model_args", []),
         )
 
         results = collect_round(round_dir / "logs", round_no, chain_ids)

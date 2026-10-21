@@ -104,9 +104,14 @@ def test_full_grid_ids_are_unique():
     directed = (
         len(AUTHORITY) * len(PERMISSIONS) * len(IDENTITY) * len(MECHANISM) * len(DELIBERATION)
     )
+    # Both collapsing tasks (unprompted, self_draft) keep one authority x permissions cell.
     unprompted = len(IDENTITY) * len(MECHANISM) * len(DELIBERATION)
+    self_draft = len(IDENTITY) * len(MECHANISM) * len(DELIBERATION)
     expected = (
-        len(available_seeds()) * len(EMBODIMENT) * len(TOOLS) * (directed + unprompted)
+        len(available_seeds())
+        * len(EMBODIMENT)
+        * len(TOOLS)
+        * (directed + unprompted + self_draft)
     )
     _unused = (
         len(available_seeds())
@@ -160,7 +165,8 @@ def test_unprompted_grid_does_not_bill_identical_cells():
     assert len(one) == 1
     both = expand("c0_broad_consensus", "all", "none", "editor",
                   "all", "abstract", "context", "full", "none")
-    assert len(both) == len(AUTHORITY) + 1  # 5 directed + 1 collapsed unprompted
+    # directed cells + 1 collapsed unprompted + 1 collapsed self_draft
+    assert len(both) == len(AUTHORITY) + 2
 
 
 def test_eigenbench_seeds_are_present_and_shaped_like_c0():

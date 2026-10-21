@@ -91,7 +91,7 @@ def test_section_skeleton_is_constant_except_for_deliberation():
             line for line in prompt.split("\n") if line in KNOWN_HEADERS
         ]
         expected = ["DOCUMENT ROLE", "AUTHORITY", "EDITING SCOPE"]
-        if c.deliberation == "explicit":
+        if c.deliberation in ("explicit", "blind"):
             expected.append("DELIBERATION")
         assert headers == expected, c.id
 
@@ -217,3 +217,45 @@ def test_embodiment_governed_puts_the_seed_in_the_system_message():
 
 def test_embodiment_does_not_leak_into_the_user_turn():
     assert build_prompt(Condition(embodiment="governed")) == build_prompt(Condition())
+
+
+# --- ablation-study arms ----------------------------------------------------------
+
+
+def test_self_draft_prompt_never_shows_or_mentions_editing_an_existing_file():
+    from constitutional_drift.conditions import Condition
+    from constitutional_drift.prompts import SELF_DRAFT_CORE
+
+    c = Condition(seed="c0_minimal", task="self_draft",
+                  identity="future_same", mechanism="post_training_replacement")
+    prompt = build_prompt(c)
+    assert prompt.startswith(SELF_DRAFT_CORE)
+    assert "does not exist yet" in prompt
+    # The seed's text must not leak into the user turn; it reaches the subject only
+    # through the system message when governed.
+    assert "Be helpful." not in prompt
+    for word in ("revise", "edit ", "improve", "existing"):
+        assert word not in prompt.lower()
+
+
+def test_self_draft_collapses_authority_and_permissions():
+    from constitutional_drift.conditions import Condition
+
+    a = Condition(seed="c0_minimal", task="self_draft", authority="full_authority",
+                  permissions="add_only")
+    b = Condition(seed="c0_minimal", task="self_draft")
+    assert a.id == b.id
+
+
+def test_blind_prompt_only_for_blind_arm_and_hides_the_document():
+    from constitutional_drift.conditions import Condition
+    from constitutional_drift.prompts import build_blind_prompt
+
+    assert build_blind_prompt(Condition(seed="c0_minimal")) is None
+    c = Condition(seed="c0_minimal", deliberation="blind",
+                  identity="future_same", mechanism="post_training_replacement")
+    blind = build_blind_prompt(c)
+    assert blind is not None
+    assert "Before you see the current document" in blind
+    assert "Be helpful." not in blind
+    assert "future instance of the same assistant" in blind

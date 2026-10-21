@@ -16,12 +16,14 @@ from pathlib import Path
 from inspect_ai import Task, task
 from inspect_ai.agent import AgentPrompt, as_solver, react
 from inspect_ai.dataset import MemoryDataset, Sample
+from inspect_ai.model import ChatMessageUser
 from inspect_ai.solver import Generate, Solver, TaskState, solver
 from inspect_ai.tool import bash, text_editor, think
 
 from constitutional_drift.conditions import Condition, FactorSpec, expand, seed_path
 from constitutional_drift.prompts import (
     SUBMIT_PROMPT,
+    build_blind_prompt,
     build_prompt,
     build_system_message,
 )
@@ -36,10 +38,19 @@ def _sample(condition: Condition) -> Sample:
     The entire treatment is the user turn (`input`). Sample.files copies the exact C0
     bytes into a fresh sandbox, so every sample and every epoch starts identically.
     """
+    # Under task="self_draft" the workspace starts empty: the subject writes the file
+    # itself, and the seed reaches it only through the system message when governed.
+    # The scorer still compares the result against the seed, so change_ratio there
+    # measures distance from the previous round's document.
+    files = (
+        {}
+        if condition.task == "self_draft"
+        else {CONSTITUTION_PATH: str(seed_path(condition.seed))}
+    )
     return Sample(
         id=condition.id,
         input=build_prompt(condition),
-        files={CONSTITUTION_PATH: str(seed_path(condition.seed))},
+        files=files,
         metadata={
             "condition": condition.as_dict(),
             "c0_text": condition.seed_text(),
@@ -65,6 +76,18 @@ def constitution_editor(
 
     async def solve(state: TaskState, generate: Generate) -> TaskState:
         condition = Condition(**state.metadata["condition"])
+
+        blind = build_blind_prompt(condition)
+        if blind is not None:
+            # deliberation="blind": a tool-free first turn in which the subject states its
+            # own view before seeing the document, then the normal task prompt. The
+            # view stays in the conversation and is also kept in the sample metadata so
+            # it can be rated on its own.
+            task_message = state.messages[-1]
+            state.messages = [ChatMessageUser(content=blind)]
+            state = await generate(state, tool_calls="none")
+            state.metadata["blind_draft"] = state.output.completion
+            state.messages.append(task_message)
 
         tools = [text_editor(timeout=tool_timeout)]
         if condition.tools == "editor_bash":

@@ -102,3 +102,88 @@ def test_limits_are_set_so_a_stuck_sample_is_scored_not_hung():
 def test_invalid_factor_value_fails_at_task_construction():
     with pytest.raises(ValueError, match="authority"):
         constitution_edit(authority="please_edit_a_lot")
+
+
+# --- ablation-study arms: solver wiring without a model or Docker -------------------
+
+
+def _run_solver_with_fakes(monkeypatch, condition):
+    """Run constitution_editor() with a fake generate and a fake react agent.
+
+    Returns (messages the agent received, state after the solver).
+    """
+    import asyncio
+
+    from inspect_ai.model import ChatMessageAssistant, ChatMessageUser, ModelOutput
+    from inspect_ai.solver import TaskState
+
+    from constitutional_drift import tasks as tasks_mod
+    from constitutional_drift.prompts import build_prompt
+
+    seen: dict = {}
+
+    def fake_react(**kwargs):
+        seen["instructions"] = kwargs["prompt"].instructions
+        return "agent"
+
+    def fake_as_solver(agent):
+        async def run(state, generate):
+            seen["messages"] = list(state.messages)
+            return state
+        return run
+
+    monkeypatch.setattr(tasks_mod, "react", fake_react)
+    monkeypatch.setattr(tasks_mod, "as_solver", fake_as_solver)
+
+    async def fake_generate(state, tool_calls="loop", **kwargs):
+        seen["generate_tool_calls"] = tool_calls
+        seen["generate_saw"] = list(state.messages)
+        state.output = ModelOutput.from_content("mockllm/model", "MY BLIND VIEW")
+        state.messages.append(ChatMessageAssistant(content="MY BLIND VIEW"))
+        return state
+
+    state = TaskState(
+        model="mockllm/model", sample_id="s", epoch=1,
+        input=build_prompt(condition),
+        messages=[ChatMessageUser(content=build_prompt(condition))],
+        metadata={"condition": condition.as_dict()},
+    )
+    solver = tasks_mod.constitution_editor()
+    state = asyncio.run(solver(state, fake_generate))
+    return seen, state
+
+
+def test_blind_arm_sends_tool_free_view_turn_before_the_task(monkeypatch):
+    from constitutional_drift.conditions import Condition
+    from constitutional_drift.prompts import build_blind_prompt, build_prompt
+
+    c = Condition(seed="c0_minimal", deliberation="blind")
+    seen, state = _run_solver_with_fakes(monkeypatch, c)
+    assert seen["generate_tool_calls"] == "none"
+    # The blind turn saw only the blind prompt, never the task (which names the file).
+    assert [m.text for m in seen["generate_saw"]] == [build_blind_prompt(c)]
+    texts = [m.text for m in seen["messages"]]
+    assert texts == [build_blind_prompt(c), "MY BLIND VIEW", build_prompt(c)]
+    assert state.metadata["blind_draft"] == "MY BLIND VIEW"
+
+
+def test_non_blind_arm_goes_straight_to_the_agent(monkeypatch):
+    from constitutional_drift.conditions import Condition
+    from constitutional_drift.prompts import build_prompt
+
+    c = Condition(seed="c0_minimal")
+    seen, _ = _run_solver_with_fakes(monkeypatch, c)
+    assert "generate_saw" not in seen
+    assert [m.text for m in seen["messages"]] == [build_prompt(c)]
+
+
+def test_self_draft_sample_has_empty_workspace_but_governed_system_message():
+    from constitutional_drift.conditions import Condition
+    from constitutional_drift.prompts import build_system_message
+    from constitutional_drift.tasks import _sample
+
+    c = Condition(seed="c0_minimal", task="self_draft", embodiment="governed")
+    sample = _sample(c)
+    assert not sample.files
+    system = build_system_message(c)
+    assert system is not None and "Be helpful." in system
