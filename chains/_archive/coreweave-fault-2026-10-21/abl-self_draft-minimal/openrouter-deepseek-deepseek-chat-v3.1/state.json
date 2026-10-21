@@ -1,0 +1,63 @@
+{
+  "name": "abl-self_draft-minimal",
+  "model": "openrouter/deepseek/deepseek-chat-v3.1",
+  "c0": "c0_minimal",
+  "n_chains": 4,
+  "max_rounds": 6,
+  "stop_after": 999,
+  "arm": {
+    "task": "self_draft",
+    "authority": "preferred_self",
+    "deliberation": "none",
+    "round1_embodiment": "governed",
+    "embodiment": "governed"
+  },
+  "model_args": [],
+  "rounds_completed": 1,
+  "chains": {
+    "chain01": {
+      "status": "failed",
+      "consecutive_no_edits": 0,
+      "reason": "round 1: FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'",
+      "history": [
+        {
+          "round": 1,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'"
+        }
+      ]
+    },
+    "chain02": {
+      "status": "failed",
+      "consecutive_no_edits": 0,
+      "reason": "round 1: FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'",
+      "history": [
+        {
+          "round": 1,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'"
+        }
+      ]
+    },
+    "chain03": {
+      "status": "failed",
+      "consecutive_no_edits": 0,
+      "reason": "round 1: FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'",
+      "history": [
+        {
+          "round": 1,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'"
+        }
+      ]
+    },
+    "chain04": {
+      "status": "failed",
+      "consecutive_no_edits": 0,
+      "reason": "round 1: FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'",
+      "history": [
+        {
+          "round": 1,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory.: '/workspace/constitution.md'"
+        }
+      ]
+    }
+  }
+}

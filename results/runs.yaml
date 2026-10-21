@@ -75,6 +75,148 @@ runs:
     status: complete
     inspect_version: TODO(uday)   # not recorded at run time; see docs/running-your-own.md
 
+  # Ablation study (Oct 21): one chain directory per arm and seed, all models inside.
+  # The base arm on c0_minimal for Sonnet and GPT-5 is chains/seed-minimal, reused.
+  - id: abl-base-minimal
+    date: 2026-10-21
+    question: >-
+      Does the chains-seeds design (governed from round 2, preferred_self) reach a fixed point, and where, from each seed? Seed c0_minimal.
+    models:
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 48
+    cost_usd: 0.21   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-base-minimal
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-base-spec
+    date: 2026-10-21
+    question: >-
+      Does the chains-seeds design (governed from round 2, preferred_self) reach a fixed point, and where, from each seed? Seed c0_spec_anthropic.
+    models:
+      - openrouter/anthropic/claude-sonnet-5
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/openai/gpt-5
+      - openrouter/qwen/qwen3.8-27b
+    runs: 96
+    cost_usd: 5.11   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-base-spec
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-blind-minimal
+    date: 2026-10-21
+    question: >-
+      Does a blind view-first turn create the attractor? (ungoverned plus a tool-free view turn) Seed c0_minimal.
+    models:
+      - openrouter/anthropic/claude-sonnet-5
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 72
+    cost_usd: 3.56   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-blind-minimal
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-blind-spec
+    date: 2026-10-21
+    question: >-
+      Does a blind view-first turn create the attractor? (ungoverned plus a tool-free view turn) Seed c0_spec_anthropic.
+    models:
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 48
+    cost_usd: 0.56   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-blind-spec
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-full_authority-minimal
+    date: 2026-10-21
+    question: >-
+      Is the drift just the preferred_self framing? (as base, authority=full_authority) Seed c0_minimal.
+    models:
+      - openrouter/anthropic/claude-sonnet-5
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/openai/gpt-5
+      - openrouter/qwen/qwen3.8-27b
+    runs: 96
+    cost_usd: 1.65   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-full_authority-minimal
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-full_authority-spec
+    date: 2026-10-21
+    question: >-
+      Is the drift just the preferred_self framing? (as base, authority=full_authority) Seed c0_spec_anthropic.
+    models:
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 48
+    cost_usd: 0.12   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-full_authority-spec
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-self_draft-minimal
+    date: 2026-10-21
+    question: >-
+      Inference analogue of the draft-and-train pipeline: write from scratch each round, governed by the previous document Seed c0_minimal.
+    models:
+      - openrouter/anthropic/claude-sonnet-5
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 72
+    cost_usd: 1.98   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-self_draft-minimal
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-self_draft-spec
+    date: 2026-10-21
+    question: >-
+      Inference analogue of the draft-and-train pipeline: write from scratch each round, governed by the previous document Seed c0_spec_anthropic.
+    models:
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 48
+    cost_usd: 0.27   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-self_draft-spec
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-ungoverned-minimal
+    date: 2026-10-21
+    question: >-
+      Does living under the document damp drift? (as base, never governed) Seed c0_minimal.
+    models:
+      - openrouter/anthropic/claude-sonnet-5
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/openai/gpt-5
+      - openrouter/qwen/qwen3.8-27b
+    runs: 96
+    cost_usd: 5.30   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-ungoverned-minimal
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+  - id: abl-ungoverned-spec
+    date: 2026-10-21
+    question: >-
+      Does living under the document damp drift? (as base, never governed) Seed c0_spec_anthropic.
+    models:
+      - openrouter/anthropic/claude-sonnet-5
+      - openrouter/deepseek/deepseek-chat-v3.1
+      - openrouter/qwen/qwen3.8-27b
+    runs: 71
+    cost_usd: 2.35   # derived from logged tokens at listed prices; billed total for the night is in the run notes
+    chain_dir: chains/abl-ungoverned-spec
+    writeup: results/ablations-run-notes.md
+    status: complete
+    inspect_version: 0.3.222
+
   # --- archived -------------------------------------------------------------------
   # Single-shot experiments under an earlier design: one model, one document, one
   # opportunity to edit. Different question, not a baseline for the chain runs. Kept

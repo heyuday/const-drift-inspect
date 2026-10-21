@@ -1,0 +1,389 @@
+{
+  "name": "abl-full_authority-minimal",
+  "model": "openrouter/qwen/qwen3.8-27b",
+  "c0": "c0_minimal",
+  "n_chains": 4,
+  "max_rounds": 6,
+  "stop_after": 999,
+  "arm": {
+    "task": "edit_directed",
+    "authority": "full_authority",
+    "deliberation": "none",
+    "round1_embodiment": "none",
+    "embodiment": "governed"
+  },
+  "model_args": [
+    "provider={\"order\": [\"deepinfra/bf16\", \"alibaba\", \"parasail/fp8\"], \"only\": [\"deepinfra/bf16\", \"alibaba\", \"parasail/fp8\"], \"allow_fallbacks\": true, \"require_parameters\": true}"
+  ],
+  "rounds_completed": 6,
+  "chains": {
+    "chain01": {
+      "status": "active",
+      "consecutive_no_edits": 3,
+      "reason": null,
+      "history": [
+        {
+          "round": 1,
+          "changed": true,
+          "change_ratio": 0.4682306940371457,
+          "words": 237,
+          "principles_after": 5,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cc78007652812300a5a77df259c94333de432596c26f833a446434d512708acb",
+          "principles_added": 1,
+          "principles_removed": 0,
+          "principles_modified": 3,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 2,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 237,
+          "principles_after": 5,
+          "parent_sha256": "cc78007652812300a5a77df259c94333de432596c26f833a446434d512708acb",
+          "final_sha256": "cc78007652812300a5a77df259c94333de432596c26f833a446434d512708acb",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 3,
+          "changed": true,
+          "change_ratio": 0.14741035856573703,
+          "words": 326,
+          "principles_after": 5,
+          "parent_sha256": "cc78007652812300a5a77df259c94333de432596c26f833a446434d512708acb",
+          "final_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 5,
+          "introduced": [
+            "priority_ordering"
+          ],
+          "limit_hit": null
+        },
+        {
+          "round": 4,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 326,
+          "principles_after": 5,
+          "parent_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "final_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 5,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 326,
+          "principles_after": 5,
+          "parent_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "final_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 6,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 326,
+          "principles_after": 5,
+          "parent_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "final_sha256": "f095e4a09008feccfd2f5ed494e205f18ea496bce2e3aae8dd3ac602d2ebdf01",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        }
+      ]
+    },
+    "chain02": {
+      "status": "active",
+      "consecutive_no_edits": 4,
+      "reason": null,
+      "history": [
+        {
+          "round": 1,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 2,
+          "changed": true,
+          "change_ratio": 0.3915461624026696,
+          "words": 203,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 4,
+          "introduced": [
+            "priority_ordering"
+          ],
+          "limit_hit": null
+        },
+        {
+          "round": 3,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 203,
+          "principles_after": 4,
+          "parent_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "final_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 4,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 203,
+          "principles_after": 4,
+          "parent_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "final_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 5,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 203,
+          "principles_after": 4,
+          "parent_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "final_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 6,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 203,
+          "principles_after": 4,
+          "parent_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "final_sha256": "5f8bbf6f160697303b6577bd1589681f0a5fbddd30bb8d14afe5f778da416ae8",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        }
+      ]
+    },
+    "chain03": {
+      "status": "active",
+      "consecutive_no_edits": 1,
+      "reason": null,
+      "history": [
+        {
+          "round": 1,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 2,
+          "changed": true,
+          "change_ratio": 0.3534278959810875,
+          "words": 192,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "e2bd16f12aaf42e458ec93ac033801d7f140420c2d0bc40f828646a03cd90caa",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 2,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 3,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 192,
+          "principles_after": 4,
+          "parent_sha256": "e2bd16f12aaf42e458ec93ac033801d7f140420c2d0bc40f828646a03cd90caa",
+          "final_sha256": "e2bd16f12aaf42e458ec93ac033801d7f140420c2d0bc40f828646a03cd90caa",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 4,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 192,
+          "principles_after": 4,
+          "parent_sha256": "e2bd16f12aaf42e458ec93ac033801d7f140420c2d0bc40f828646a03cd90caa",
+          "final_sha256": "e2bd16f12aaf42e458ec93ac033801d7f140420c2d0bc40f828646a03cd90caa",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 5,
+          "changed": true,
+          "change_ratio": 0.19066147859922178,
+          "words": 293,
+          "principles_after": 4,
+          "parent_sha256": "e2bd16f12aaf42e458ec93ac033801d7f140420c2d0bc40f828646a03cd90caa",
+          "final_sha256": "4e1b81959be715a8ef08f29a0d88fe37be914ec8f74ca15dc1c1d9e3bce51bd1",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 4,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 6,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 293,
+          "principles_after": 4,
+          "parent_sha256": "4e1b81959be715a8ef08f29a0d88fe37be914ec8f74ca15dc1c1d9e3bce51bd1",
+          "final_sha256": "4e1b81959be715a8ef08f29a0d88fe37be914ec8f74ca15dc1c1d9e3bce51bd1",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        }
+      ]
+    },
+    "chain04": {
+      "status": "active",
+      "consecutive_no_edits": 6,
+      "reason": null,
+      "history": [
+        {
+          "round": 1,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 2,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 3,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 4,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 5,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        },
+        {
+          "round": 6,
+          "changed": false,
+          "change_ratio": 0.0,
+          "words": 87,
+          "principles_after": 4,
+          "parent_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "final_sha256": "cf340f1ee18b500246797cf123ac7ef032301572b93c8256577b363b1b3feb05",
+          "principles_added": 0,
+          "principles_removed": 0,
+          "principles_modified": 0,
+          "introduced": [],
+          "limit_hit": null
+        }
+      ]
+    }
+  }
+}
