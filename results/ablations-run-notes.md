@@ -71,7 +71,11 @@ round 1 under the identical condition is indistinguishable from September's (p 0
    (not deleted) to `chains/_archive/coreweave-fault-2026-10-21/` and rerun pinned to DeepInfra,
    which served all of September's DeepSeek runs (those are unaffected). Sonnet, GPT-5 and
    Qwen were audited: every tool call parsed.
-7. **My mistakes.** Two launches failed on zsh word-splitting (no cost). A browser check I
+7. **Rate limit.** In DeepSeek's ungoverned spec-seed cell, 3 of 4 chains failed at round 5 on a
+   DeepInfra rate limit, because all ten DeepSeek reruns used that one provider at once. Per
+   RUN_TONIGHT they stay failed; that cell's last two rounds rest on one chain. No other cell
+   has a failed chain.
+8. **My mistakes.** Two launches failed on zsh word-splitting (no cost). A browser check I
    started at 02:10 hung until 09:06; the runs had finished by 02:30, but it cost the night's
    write-up time.
 
