@@ -1335,6 +1335,7 @@ code {{ font:13px var(--font-data); }}
 <h1>Is the attractor the model or the harness?</h1>
 <p class="lede">Recursive chains in which a model rewrites the constitution that will govern its successor, under five arms that each change one thing from the chains-seeds design. Two seeds on opposite sides of oversight. Fixed {last} rounds, no stop rule. Every document rated on the 12 axes of the value-space analysis by the same rater (gpt-6-luna), with the rater's own noise measured and subtracted.</p>
 {note('headline')}
+{note('meeting')}
 </header>
 <div class="tiles">{tiles_html}</div>
 
