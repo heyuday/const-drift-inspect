@@ -1263,22 +1263,20 @@ def render(n: dict, notes: dict | None = None, examples: list | None = None) -> 
 
     return f"""<title>Attractor Ablations</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: one reading column of findings, each followed by its evidence (figure, then table). */
 :root {{ color-scheme: light; --surface-0:#f3f4f2; --surface-1:#fbfcfb; --line:#dfe1dc; --text-primary:#101211; --text-secondary:#4c514d; --text-muted:#717672;
   --series-1:#2a78d6; --series-2:#eb6834; --series-3:#1baf7a; --series-4:#eda100; --ink-accent:#1f3d33; --warn:#9a5b00;
-  --font-display:"IBM Plex Serif", Georgia, serif; --font-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; --font-data:"IBM Plex Mono", ui-monospace, Menlo, monospace; }}
+  --font-display:system-ui, -apple-system, "Segoe UI", sans-serif; --font-body:system-ui, -apple-system, "Segoe UI", sans-serif; --font-data:ui-monospace, Menlo, monospace; }}
 @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) {{ color-scheme: dark; --surface-0:#121413; --surface-1:#1a1c1b; --line:#323633; --text-primary:#eef0ed; --text-secondary:#c0c5c0; --text-muted:#949a95;
   --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500; --ink-accent:#9fd1bd; --warn:#e3a33d; }} }}
 :root[data-theme="dark"] {{ color-scheme: dark; --surface-0:#121413; --surface-1:#1a1c1b; --line:#323633; --text-primary:#eef0ed; --text-secondary:#c0c5c0; --text-muted:#949a95;
   --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500; --ink-accent:#9fd1bd; --warn:#e3a33d; }}
 body {{ margin:0; background:var(--surface-0); color:var(--text-primary); font:15px/1.6 var(--font-body);
   padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }}
-main {{ max-width:1180px; margin:0 auto; padding-block:36px 80px; display:grid; gap:44px; }}
-h1 {{ font:600 clamp(28px,4.2vw,40px)/1.12 var(--font-display); margin:0; letter-spacing:-.01em; text-wrap:balance; }}
-h2 {{ font:600 21px/1.25 var(--font-display); margin:0; text-wrap:balance; }}
+main {{ max-width:1100px; margin:0 auto; padding-block:28px 64px; display:grid; gap:36px; }}
+h1 {{ font:600 24px/1.25 var(--font-body); margin:0; text-wrap:balance; }}
+h2 {{ font:600 18px/1.3 var(--font-body); margin:0; text-wrap:balance; }}
 h3 {{ font:600 16px/1.3 var(--font-body); margin:0; }}
 p {{ margin:0; max-width:76ch; }}
 .eyebrow {{ font:500 12px/1.4 var(--font-data); text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); }}
@@ -1289,9 +1287,10 @@ section {{ display:grid; gap:14px; min-width:0; }}
 .tile {{ background:var(--surface-1); border:1px solid var(--line); border-radius:8px; padding:14px 16px; }}
 .tile .big {{ font:600 26px/1.2 var(--font-body); }}
 .tile p {{ color:var(--text-secondary); font-size:13px; }}
-.finding {{ background:var(--surface-1); border:1px solid var(--line); border-radius:8px; padding:14px 18px; max-width:84ch; display:grid; gap:8px; }}
+.finding {{ max-width:84ch; display:grid; gap:8px; }}
+.finding ul {{ margin:0; padding-left:20px; display:grid; gap:6px; }}
 .finding p {{ max-width:none; }}
-.finding b, .finding strong {{ color:var(--ink-accent); }}
+
 .multiples {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:8px; background:var(--surface-1); border:1px solid var(--line); border-radius:8px; padding:10px; }}
 .figure {{ background:var(--surface-1); border:1px solid var(--line); border-radius:8px; padding:10px; overflow-x:auto; }}
 .plane-wrap svg {{ max-width:680px; }}
@@ -1322,8 +1321,8 @@ details {{ border-top:1px solid var(--line); padding-top:8px; }}
 details summary {{ cursor:pointer; color:var(--text-secondary); font-size:14px; }}
 details > *:not(summary) {{ margin-top:10px; }}
 details summary:focus-visible, a:focus-visible {{ outline:2px solid var(--series-1); outline-offset:2px; }}
-.example {{ display:grid; gap:10px; background:var(--surface-1); border:1px solid var(--line); border-radius:8px; padding:16px 18px; }}
-.examples {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:12px; }}
+.example {{ display:grid; gap:8px; max-width:84ch; }}
+.examples {{ display:grid; gap:20px; }}
 blockquote {{ margin:0; padding:2px 0 2px 14px; border-left:2px solid var(--line); display:grid; gap:4px; }}
 blockquote p {{ font-size:14px; color:var(--text-primary); }}
 cite {{ font:normal 12px var(--font-data); color:var(--text-muted); }}
@@ -1331,13 +1330,12 @@ code {{ font:13px var(--font-data); }}
 </style>
 <main>
 <header>
-<div class="eyebrow">Ablations on the inspect harness · rated with the value-space rater · run Oct 21, 2026</div>
 <h1>Is the attractor the model or the harness?</h1>
-<p class="lede">Recursive chains in which a model rewrites the constitution that will govern its successor, under five arms that each change one thing from the chains-seeds design. Two seeds on opposite sides of oversight. Fixed {last} rounds, no stop rule. Every document rated on the 12 axes of the value-space analysis by the same rater (gpt-6-luna), with the rater's own noise measured and subtracted.</p>
+<p class="lede">Inspect harness, run overnight Oct 20-21. A model edits the constitution that will govern its successor, for {last} rounds. Five arms each change one thing from the chains-seeds setup; two seeds, one with little oversight and one with a lot. Every document is rated on Daniel's 12 axes with his rater (gpt-6-luna).</p>
+<h2>Summary</h2>
 {note('headline')}
 {note('meeting')}
 </header>
-<div class="tiles">{tiles_html}</div>
 
 <section><h2>What ran</h2>
 {note('design')}
@@ -1354,7 +1352,7 @@ code {{ font:13px var(--font-data); }}
 ], cls="text")}
 </section>
 
-<section><h2>1. Does being governed by the document damp editing?</h2>
+<section><h2>1. Does being governed reduce editing?</h2>
 {note('damping')}
 {legend(extra=[('<svg width="14" height="12" aria-hidden="true"><circle cx="7" cy="6" r="4.5" fill="none" stroke="var(--text-secondary)" stroke-width="2"/></svg>', "ungoverned"), ('<svg width="14" height="12" aria-hidden="true"><circle cx="7" cy="6" r="5" fill="var(--text-secondary)"/></svg>', "governed (base); band = 95% interval")])}
 {damping_chart(n)}
@@ -1379,7 +1377,7 @@ code {{ font:13px var(--font-data); }}
 <p class="muted">Daniel's spec-seeded chains: the two seeds start {DANIEL['seed_gap_start']} apart and close to {DANIEL['seed_gap_gen6']} by generation 6.</p>
 </section>
 
-<section><h2>4. Oversight deference, approached from both sides</h2>
+<section><h2>4. Oversight, starting from low and from high</h2>
 {note('oversight')}
 {legend(seed_dash=True)}
 {fig4}
@@ -1388,7 +1386,7 @@ code {{ font:13px var(--font-data); }}
 <details><summary>The other eleven axes, by arm</summary>{extra_axes}</details>
 </section>
 
-<section><h2>5. Model or harness?</h2>
+<section><h2>5. What decides where chains end?</h2>
 {note('ends')}
 {plane_chart(n)}
 {table(["subset of round-%d documents" % last, "documents", "model", "arm", "seed", "within cell", "rater noise alone"], dec_rows)}
@@ -1404,7 +1402,7 @@ code {{ font:13px var(--font-data); }}
 <p class="muted">Each round of the blind arm starts with a view written before the document is shown. The last two columns ask whether that round's edit moves the document toward the view it followed, compared with a view another chain of the same model wrote in the same round.</p>
 </section>
 
-<section><h2>7. Self-drafting without training, against the trained chain</h2>
+<section><h2>7. Self-drafting compared with Jinzhou's trained chain</h2>
 {note('trained')}
 {legend(extra=[('<svg width="22" height="10" aria-hidden="true"><line x1="1" x2="21" y1="5" y2="5" stroke="var(--series-4)" stroke-width="2" stroke-dasharray="5 4"/></svg>', "trained chain (Jinzhou)")])}
 {fig5}
@@ -1412,7 +1410,7 @@ code {{ font:13px var(--font-data); }}
 <p class="muted">Jinzhou's recursive self-drafting chain with MSM training (Oct 12-14): C_001 written by the untrained model, C_002-C_004 by the trained ones, rated on the same scale. Distances are to this study's Qwen3.8 27B arm ends. His documents are 6,800-12,500 words; this harness's are a tenth of that, so specificity and length differ by construction.</p>
 </section>
 
-{'<section><h2>8. What the edits look like</h2>' + note('examples') + '<div class="examples">' + ex_html + '</div></section>' if ex_html else ''}
+{'<section><h2>8. Examples</h2>' + note('examples') + '<div class="examples">' + ex_html + '</div></section>' if ex_html else ''}
 
 <section><h2>Rater noise</h2>
 <p>{nz['n_docs']} documents rated three times. One rating carries {fmt(nz['single'])} of Euclidean noise across the twelve axes (Daniel: {DANIEL['noise_single']}); a step between two documents carries {fmt(nz['step'])} (Daniel: {DANIEL['noise_step']}).</p>
@@ -1423,7 +1421,7 @@ code {{ font:13px var(--font-data); }}
 {note('limits')}
 </section>
 
-<section><h2>How the night went</h2>
+<section><h2>Run log</h2>
 {note('runlog')}
 </section>
 </main>
