@@ -1,0 +1,123 @@
+{
+  "ai_risk": {
+    "n": 2701,
+    "cut_off": 0.0,
+    "coordinate-other-ais": {
+      "safe_answer": 0.978,
+      "matching_behavior": 0.022,
+      "unparsed": 0.0,
+      "n": 410
+    },
+    "corrigible-neutral-HHH": {
+      "safe_answer": 0.253,
+      "matching_behavior": 0.253,
+      "unparsed": 0.0,
+      "n": 340
+    },
+    "power-seeking-inclination": {
+      "safe_answer": 0.908,
+      "matching_behavior": 0.908,
+      "unparsed": 0.0,
+      "n": 998
+    },
+    "survival-instinct": {
+      "safe_answer": 0.659,
+      "matching_behavior": 0.659,
+      "unparsed": 0.0,
+      "n": 953
+    }
+  },
+  "litmus_labeled": {
+    "n": 5986,
+    "cut_off": 0.0,
+    "dilemmas": 2992,
+    "unparsed": 0.0,
+    "first_shown": 0.52,
+    "dataset_action_1": 0.371,
+    "same_action_both_orders": 0.944,
+    "chose_risky_action": {
+      "any": {
+        "rate": 0.165,
+        "n": 1831
+      },
+      "Deception": {
+        "rate": 0.115,
+        "n": 832
+      },
+      "Proxy Gaming": {
+        "rate": 0.071,
+        "n": 580
+      },
+      "Self-Preservation": {
+        "rate": 0.307,
+        "n": 296
+      },
+      "Power-Seeking": {
+        "rate": 0.09,
+        "n": 315
+      },
+      "Corrigibility Failures": {
+        "rate": 0.598,
+        "n": 168
+      },
+      "Alignment Faking": {
+        "rate": 0.065,
+        "n": 31
+      },
+      "Privacy Violation": {
+        "rate": 0.153,
+        "n": 167
+      }
+    },
+    "elo": {
+      "Privacy": 1153.9,
+      "Truthfulness": 1134.3,
+      "Justice": 1103.0,
+      "Respect": 1068.9,
+      "Freedom": 1050.7,
+      "Professionalism": 1042.0,
+      "Equal Treatment": 1036.7,
+      "Protection": 1036.1,
+      "Care": 988.2,
+      "Wisdom": 973.1,
+      "Cooperation": 957.2,
+      "Sustainability": 911.0,
+      "Communication": 903.9,
+      "Adaptability": 889.0,
+      "Learning": 883.6,
+      "Creativity": 868.4
+    }
+  },
+  "ai_risk_think": {
+    "n": 2701,
+    "cut_off": 0.009,
+    "thinking_tokens": 543.388,
+    "thinking_never_closed": 0.009,
+    "looping": 0.096,
+    "answer_tokens": 2.981,
+    "coordinate-other-ais": {
+      "safe_answer": 0.98,
+      "matching_behavior": 0.02,
+      "unparsed": 0.0,
+      "n": 410
+    },
+    "corrigible-neutral-HHH": {
+      "safe_answer": 0.306,
+      "matching_behavior": 0.306,
+      "unparsed": 0.009,
+      "n": 340
+    },
+    "power-seeking-inclination": {
+      "safe_answer": 0.898,
+      "matching_behavior": 0.898,
+      "unparsed": 0.006,
+      "n": 998
+    },
+    "survival-instinct": {
+      "safe_answer": 0.787,
+      "matching_behavior": 0.787,
+      "unparsed": 0.017,
+      "n": 953
+    }
+  }
+}

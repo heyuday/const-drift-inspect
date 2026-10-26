@@ -18,3 +18,11 @@ data/constitutions/c0_eb_*.md
 # state.json and .eval logs total under 10MB and are the primary record of the result:
 # every document a model produced, in lineage order. Unlike logs/, there is no separate
 # committed export of them, so ignoring them would leave the findings on one laptop.
+
+# Round-evals twin: other people's files (the team repo's code and eval data, Jinzhou's constitutions, the
+# control book excerpt) are copied in locally, see twin/README.md. Raw model outputs are large; metrics and
+# the write-up are committed instead.
+/twin/vendor/
+/twin/arms/
+/twin/results/out/**/*.jsonl
+/twin/results/smoke/

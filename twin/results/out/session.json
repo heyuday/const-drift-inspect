@@ -1,0 +1,30 @@
+{
+  "backend": "vllm",
+  "vllm_version": "0.30.0",
+  "torch_version": "2.13.0+cu130",
+  "cuda_version": "13.0",
+  "checkpoint": "/vol/models/Qwen3.8-27B-1d4bf0f2",
+  "engine_options": {
+    "runner": "generate",
+    "model_impl": "vllm",
+    "dtype": "bfloat16",
+    "quantization": null,
+    "trust_remote_code": false,
+    "tensor_parallel_size": 1,
+    "language_model_only": true,
+    "max_model_len": 65536,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 16384,
+    "enable_chunked_prefill": true,
+    "enable_prefix_caching": true,
+    "gpu_memory_utilization": 0.9,
+    "enforce_eager": false,
+    "max_cudagraph_capture_size": 256,
+    "generation_config": "vllm",
+    "seed": 20260928
+  },
+  "eos_token_ids": [
+    248044,
+    248046
+  ]
+}
