@@ -143,11 +143,11 @@ Missing: reasoning-on AI-risk for C_002, C_003, the book, and C_001 in the train
 workspace has credit again:
 
 ```bash
-modal run --detach twin/modal_app.py --step full     # resumes: runs only the four missing tasks, about 2 h, about $10
+modal run --detach twin/modal_app.py --step full     # resumes: runs only the four missing tasks, about 2 h, about $11
 cd twin/results && modal volume get --force constdrift-twin out . && cd - && python3 twin/analyze_twin.py
 ```
 
-Modal use: the full run took 1 h 53 min on one H200, about $9 at $4.54 an hour. The smoke and setup runs
+Modal use: the full run took 1 h 53 min on one H200, about $10 with CPU and memory. The smoke and setup runs
 before it add some more. The model download ran on CPU.
 
 ## Files
